@@ -1,4 +1,4 @@
-package game;
+package game.card;
 
 import utils.ResourcesAccess;
 
@@ -25,6 +25,7 @@ public enum Character {
 
     @Override
     public String toString() {
+        // TODO : francais
         return this.name().toLowerCase();
     }
 }

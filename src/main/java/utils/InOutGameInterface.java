@@ -1,10 +1,11 @@
 package utils;
 
-import game.Player;
+import discord.User;
+import utils.choice.QuestionAnswers;
 
 public interface InOutGameInterface {
     void printGlobalMsg(String message);
-    void printPersonalMsg(Player player, String message);
+    void printPersonalMsg(User user, String message);
     void countDown(int from);
-    int askChoiceTo(Player player, ChoiceDescritpion describ);
+    int askChoiceTo(User user, QuestionAnswers describ);
 }
