@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Game implements Observer {
+public class Game {
     public final int nbStartingTurn; // during only switch available
 
     private TableRound tableRound;
@@ -35,10 +35,9 @@ public class Game implements Observer {
             return;
         }
         if (nbStartingTurn>tableRound.getNbTurnDone())
-            round = new StartingRound(out, tableRound.next());
+            round = new StartingRound(this, tableRound.next());
         else
-            round = new GameRound(out, tableRound.next());
-        round.addObserver(this);
+            round = new GameRound(this, tableRound.next());
     }
 
     private void endGame() {
@@ -53,8 +52,7 @@ public class Game implements Observer {
         return false;
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
+    public void update(Object o) {
         if(o == round){
             if(round.isEnded()) nextRound();
         }
@@ -89,5 +87,9 @@ public class Game implements Observer {
 
     public TableRound getTable() {
         return tableRound;
+    }
+
+    public MascaradeOut getOut() {
+        return out;
     }
 }

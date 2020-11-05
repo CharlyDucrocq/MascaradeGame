@@ -4,8 +4,8 @@ import com.bdj.bot_discord.mascarade_bot.errors.ActionNotAllowed;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 
 public class StartingRound extends GameRound {
-    public StartingRound(MascaradeOut out, Player next) {
-        super(out, next);
+    public StartingRound(Game game, Player next) {
+        super(game, next);
     }
 
     @Override

@@ -9,7 +9,9 @@ public enum Command {
     PEEK(CommandAction::peekAction,"peek", "peekMyCard"),
     SWITCH(CommandAction::switchAction,"switch", "switchCard"),
     USE(CommandAction::characterAction,"use", "useCharacter"),
-    CONTEST(CommandAction::contestAction,"contest", "contestUse")
+    CONTEST(CommandAction::contestAction,"contest", "contestUse"),
+    PLAYER_RECAP(CommandAction::recapPlayer,"gameRecap", "playerRecap"),
+    CHARACTER_RECAP(CommandAction::recapCharacter,"characterRecap", "actionRecap"),
     ;
 
     public final String[] eventCommands;

@@ -1,6 +1,7 @@
 package com.bdj.bot_discord.mascarade_bot.discord.commands;
 
 
+import com.bdj.bot_discord.mascarade_bot.discord.InOutDiscord;
 import com.bdj.bot_discord.mascarade_bot.discord.User;
 import com.bdj.bot_discord.mascarade_bot.errors.*;
 import com.bdj.bot_discord.mascarade_bot.game.Game;
@@ -18,12 +19,13 @@ import com.bdj.bot_discord.mascarade_bot.utils.choice.YesOrNoQuestion;
 
 public class CommandAction {
     public static Application app;
-    public static InOutGameInterface inOut;
+    public static InOutDiscord inOut;
     private static Lobby lobby;
     private static Game game;
     public static UserList userList;
 
     public static void create(MessageReceivedEvent event) {
+        inOut.setGlobalChannel(event.getMessage().getChannel());
         User user = getUser(event);
         lobby = new Lobby();
         lobby.addAdmin(user);
@@ -97,5 +99,15 @@ public class CommandAction {
 
     private static User getUser(MessageReceivedEvent event) {
         return userList.getUser(new User(event.getMember()));
+    }
+
+    public static void recapPlayer(MessageReceivedEvent messageReceivedEvent) {
+        Game game = getGame();
+        game.getOut().printPlayerRecap(game.getTable().getPlayers());
+    }
+
+    public static void recapCharacter(MessageReceivedEvent messageReceivedEvent) {
+        Game game = getGame();
+        game.getOut().printCharactersRecap(game.getCharactersList());
     }
 }

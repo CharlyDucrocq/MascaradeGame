@@ -1,13 +1,16 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
 import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.mascarade_bot.game.card.Card;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
-public class GameRound extends Observable {
+public class GameRound {
+    private final Game game;
     MascaradeOut out;
 
     Player player;
@@ -16,9 +19,10 @@ public class GameRound extends Observable {
 
     boolean isEnded = false;
 
-    GameRound(MascaradeOut out, Player player){
+    GameRound(Game game, Player player){
+        this.game = game;
         this.player = player;
-        this.out = out;
+        this.out = game.getOut();
         out.printStartTurn(this);
     }
 
@@ -53,12 +57,18 @@ public class GameRound extends Observable {
 
     public void useCharacter(){
         contestPlayers.add(0, player);
+
+        // sort to place the one who have the character in the first place
+        contestPlayers.sort(Comparator.comparing(
+                p -> Math.abs(player.getCurrentCharacter().ordinal()-charaChose.ordinal())));
+
         for (Player p : contestPlayers) {
             if (p.getCurrentCharacter() == charaChose) {
-                //TODO action
-                out.printAction(p,charaChose);
+                Card card = charaChose.getCard(p,game);
+                card.action();
+                out.printAction(p,card);
             } else {
-                //TODO penality
+                player.payPenalty(game.getBank());
                 out.printPenality(p);
             }
         }
@@ -68,8 +78,7 @@ public class GameRound extends Observable {
 
     private void endTurn(){
         isEnded = true;
-        setChanged();
-        notifyObservers();
+        game.update(this);
     }
 
     public boolean isEnded() {
@@ -78,5 +87,9 @@ public class GameRound extends Observable {
 
     public User getUser() {
         return player.getUser();
+    }
+
+    public Game getGame() {
+        return game;
     }
 }

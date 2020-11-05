@@ -31,7 +31,7 @@ public class Application extends ListenerAdapter {
                 try {
                     command.doCommand(event);
                 } catch (GameException e){
-                    //TODO
+                    CommandAction.inOut.printError(e);
                 }
         }
     }

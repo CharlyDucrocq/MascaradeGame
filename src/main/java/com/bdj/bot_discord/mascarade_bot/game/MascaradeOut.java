@@ -1,5 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
+import com.bdj.bot_discord.mascarade_bot.game.card.Card;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
 
@@ -16,13 +17,28 @@ public class MascaradeOut {
 
     public void printStart(Game game){
         inOut.printGlobalMsg(
-                "############### *Début de la partie* ###############"
+                "############### *Début de la partie* ###############\n"
         );
-        String partyDescription = "Liste des personnages :\n";
-        for (Character character : game.getCharactersList()){
-            partyDescription+= "\t" +character.toString() + " : "+character.getDescription()+"\n";
+        printCharactersRecap(game.getCharactersList());
+        String partyDescription = "Configuration de départ des Joueurs :\n";
+        for (Player player : game.getTable().getPlayers()){
+            partyDescription+= "\t" +player.toString() + " : "+player.getCurrentCharacter().toString()+"\n";
         }
         inOut.printGlobalMsg(partyDescription);
+    }
+
+    public void printCharactersRecap(List<Character> charactersList) {
+        String charactersRecap = "Les personnages :\n";
+        for (Character character : charactersList){
+            charactersRecap+= "\t" +character.toString() + " : "+character.getDescription()+"\n";
+        }
+        inOut.printGlobalMsg(charactersRecap);
+    }
+
+    public void printPlayerRecap(Player[] players){
+        String playersRecap = "Situation actuel :\n";
+        for(Player player:players) playersRecap+= " - "+player.toString()+"\n";
+        inOut.printGlobalMsg(playersRecap);
     }
 
     public void printPeek(Player player){
@@ -54,10 +70,10 @@ public class MascaradeOut {
     }
 
 
-    public void printAction(Player player, Character charaChose) {
+    public void printAction(Player player, Card charaChose) {
         inOut.printGlobalMsg(
-                player.toString()+" utilise le pouvoir "+charaChose.toString()+"\n" +
-                        "("+charaChose.getDescription()+")"
+                player.toString()+" utilise le pouvoir "+charaChose.type.toString()+"\n" +
+                        "("+charaChose.type.getDescription()+")"
         );
     }
 

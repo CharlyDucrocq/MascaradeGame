@@ -8,4 +8,12 @@ public class User {
     public User(Member member){
         this.member = member;
     }
+
+    public String getName() {
+        return member.getNickname();
+    }
+
+    public void sendMessage(String message) {
+        member.getDefaultChannel().sendMessage(message);
+    }
 }

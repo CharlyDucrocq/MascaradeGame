@@ -39,4 +39,13 @@ public class Player {
         if (purse.getValue()>=GlobalParameter.GLOBAL_GOAL) return true;
         return false;
     }
+
+    public void payPenalty(Bank bank) {
+        bank.give(purse.removeCoin(-1));
+    }
+
+    @Override
+    public String toString() {
+        return user.getName()+"("+purse.getValue()+"£)";
+    }
 }

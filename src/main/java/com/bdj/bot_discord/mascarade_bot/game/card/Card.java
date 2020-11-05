@@ -4,7 +4,7 @@ import com.bdj.bot_discord.mascarade_bot.game.Game;
 import com.bdj.bot_discord.mascarade_bot.game.Player;
 
 public abstract class Card {
-    final Character type;
+    public final Character type;
     final Player player;
 
     public Card(Character type, Player player){
