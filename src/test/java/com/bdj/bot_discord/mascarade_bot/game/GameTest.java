@@ -13,7 +13,7 @@ public class GameTest {
     User[] users;
 
 
-    @BeforeAll
+    @BeforeEach
     void init(){
         Lobby lobby = new Lobby();
         users = new User[NB_PLAYERS];

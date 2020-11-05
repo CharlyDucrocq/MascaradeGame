@@ -8,7 +8,6 @@ import java.util.List;
 
 public class Lobby {
     List<Player> players = new LinkedList<>();
-    GameFactory gameFactory = new GameFactory(players);
     Player admin;
 
     public void addPlayer(User user){
@@ -22,7 +21,7 @@ public class Lobby {
     }
 
     public Game createGame(){
-        return gameFactory.createGame();
+        return new GameFactory(players).createGame();
     }
 
     public boolean haveEnoughPlayer(){
