@@ -12,11 +12,12 @@ Adaptation du jeu Mascarade sous forme de bot discord
   - Eveque
   - Roi
   - Reine
-  - Sorcière
+  - Sorcière (choix de la cible : plus riche)
   - Mendiant
   - Voleur
 - Action disponible :
   - Echanger carte (choix du joueur non-aléatoire mais choix de l'échange aléatoire)
-  - Action
-  - Contre-action (la bloque juste)
+  - Regarder sa carte
+  - Action (2 partie : choisir son role, utiliser son role)
+  - Contre-action
 - Fin de partie a 13 pieces
