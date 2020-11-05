@@ -17,6 +17,8 @@ public class Game implements Observer {
     private InOutGameInterface inOut;
     private MascaradeOut out;
 
+    private Bank bank = new Bank();
+
     public Game(Player[] players){
         tableRound = new TableRound(players);
         nbStartingTurn = players.length;
@@ -79,5 +81,13 @@ public class Game implements Observer {
         List<Character> result = new LinkedList<>();
         for (Player player : tableRound.getPlayers()) if(!result.contains(player.getCurrentCharacter())) result.add(player.getCurrentCharacter());
         return result;
+    }
+
+    public Bank getBank() {
+        return bank;
+    }
+
+    public TableRound getTable() {
+        return tableRound;
     }
 }

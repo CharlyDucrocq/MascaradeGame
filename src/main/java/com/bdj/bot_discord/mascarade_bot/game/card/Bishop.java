@@ -18,4 +18,8 @@ public class Bishop extends Card{
     public void action() {
         player.getPurse().addCoin(richest.getPurse().removeCoin(COIN_TO_SWITCH));
     }
+
+    public static Card create(Player player, Game game) {
+        return new Bishop(player, game.getTable());
+    }
 }
