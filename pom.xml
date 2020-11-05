@@ -8,6 +8,16 @@
     <artifactId>mascarade_bot</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- CHANGE ME IF NEEDED, other : ISO-8859-1 -->
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <junit.jupiter.version>5.5.1</junit.jupiter.version>
+        <mockito.core.version>3.2.0</mockito.core.version>
+        <jackson.databind.version>2.10.1</jackson.databind.version>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -23,7 +33,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>fr.frederic.dev.kashgar.Main</mainClass>
+                            <mainClass>com.bdj.bot_discord.mascarade_bot.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -49,6 +59,26 @@
             <groupId>com.vdurmont</groupId>
             <artifactId>emoji-java</artifactId>
             <version>5.1.1</version>
+        </dependency>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency> <!-- Junit 5 vintage to JUnit 4 might be necessary for some other tools -->
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.core.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
