@@ -9,6 +9,7 @@ import com.bdj.bot_discord.mascarade_bot.game.Lobby;
 import com.bdj.bot_discord.mascarade_bot.game.Player;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import com.bdj.bot_discord.mascarade_bot.main.Application;
+import com.bdj.bot_discord.mascarade_bot.utils.choice.character.CharacterChoice;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
 import com.bdj.bot_discord.mascarade_bot.utils.choice.user.UserQuestion;
@@ -58,14 +59,14 @@ public class CommandAction {
                             () -> round.switchCard(otherPlayer, false));
                     inOut.askChoiceTo(userWhoAsk,yesOrNo);
                 });
+        inOut.askChoiceTo(userWhoAsk,userChoice);
     }
 
     public static void peekAction(MessageReceivedEvent event){
         User user = getUser(event);
         GameRound round = getActualRound();
         if(!user.equals(round.getUser())) throw new BadUser();
-        Character character = getActualRound().peekCharacter();
-        inOut.printPersonalMsg(user, "You are "+ character.toString());
+        getActualRound().peekCharacter();
     }
 
     public static void characterAction(MessageReceivedEvent event){
@@ -73,6 +74,7 @@ public class CommandAction {
         GameRound round = getActualRound();
         if(!user.equals(round.getUser())) throw new BadUser();
 
+        // TODO
     }
 
     public static void contestAction(MessageReceivedEvent event){

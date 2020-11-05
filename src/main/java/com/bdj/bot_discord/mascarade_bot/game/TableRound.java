@@ -4,19 +4,23 @@ import com.bdj.bot_discord.mascarade_bot.discord.User;
 
 public class TableRound {
     private Player[] players;
-    private int current = 0;
+    private int current = -1;
+
+    int count = 0;
 
     public TableRound(Player[] players){
         this.players = players;
     }
 
     public Player next(){
+        count++;
         current++;
         if(current>=players.length) current-=players.length;
         return players[current];
     }
 
     public Player prev(){
+        count--;
         current--;
         if(current<0) current+=players.length;
         return players[current];
@@ -45,5 +49,9 @@ public class TableRound {
         User[] users = new User[players.length];
         for(int i=0;i<users.length;i++) users[i]=players[i].getUser();
         return users;
+    }
+
+    public int getNbTurnDone() {
+        return count;
     }
 }

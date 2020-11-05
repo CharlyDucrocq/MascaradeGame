@@ -7,22 +7,28 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class Game implements Observer {
-    private final int nbRoundForInit = 1;
+    public final int nbStartingTurn; // during only switch available
+
     private TableRound tableRound;
     private GameRound round;
     private InOutGameInterface inOut;
+    private MascaradeOut out;
 
     public Game(Player[] players){
         tableRound = new TableRound(players);
+        nbStartingTurn = players.length;
     }
 
     public void start() {
-        //TODO : affichage infos
+        out.printStart(this);
         nextRound();
     }
 
     void nextRound(){
-        round = new GameRound(tableRound.next());
+        if (nbStartingTurn>tableRound.getNbTurnDone())
+            round = new StartingRound(out, tableRound.next());
+        else
+            round = new GameRound(out, tableRound.next());
     }
 
     @Override
@@ -38,6 +44,7 @@ public class Game implements Observer {
 
     public void setInOut(InOutGameInterface inOut) {
         this.inOut = inOut;
+        this.out = new MascaradeOut(inOut);
     }
 
     public Player getPlayer(User user) {
