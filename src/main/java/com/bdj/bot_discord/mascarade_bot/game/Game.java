@@ -1,8 +1,11 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
 import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -25,10 +28,27 @@ public class Game implements Observer {
     }
 
     void nextRound(){
+        if(ended()){
+            endGame();
+            return;
+        }
         if (nbStartingTurn>tableRound.getNbTurnDone())
             round = new StartingRound(out, tableRound.next());
         else
             round = new GameRound(out, tableRound.next());
+        round.addObserver(this);
+    }
+
+    private void endGame() {
+        out.printEnd(this);
+        out.printPodium(tableRound);
+    }
+
+    private boolean ended() {
+        for(Player player : tableRound.getPlayers()){
+            if (player.endTheGame()) return true;
+        }
+        return false;
     }
 
     @Override
@@ -53,5 +73,11 @@ public class Game implements Observer {
 
     public User[] getUsers() {
         return tableRound.getUsers();
+    }
+
+    public List<Character> getCharactersList() {
+        List<Character> result = new LinkedList<>();
+        for (Player player : tableRound.getPlayers()) if(!result.contains(player.getCurrentCharacter())) result.add(player.getCurrentCharacter());
+        return result;
     }
 }

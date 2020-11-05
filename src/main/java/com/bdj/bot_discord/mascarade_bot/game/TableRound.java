@@ -54,4 +54,35 @@ public class TableRound {
     public int getNbTurnDone() {
         return count;
     }
+
+    public Player getPrevOf(Player player) {
+        if(player == players[0]) return players[players.length-1];
+        for (int i=1;i<players.length;i++) if (player == players[i]) return players[i-1];
+        throw new RuntimeException("Player Not Found");
+    }
+
+    public Player getNextOf(Player player) {
+        if(player == players[players.length-1]) return players[0];
+        for (int i=players.length-2;i>=0;i--) if (player == players[i]) return players[i+1];
+        throw new RuntimeException("Player Not Found");
+    }
+
+    public Player getRichest(Player except) {
+        int max = 0;
+        Player richest = null;
+        for(Player p : players) {
+            if(p!=except) {
+                if (p.getPurse().getValue()>max){
+                    max = p.getPurse().getValue();
+                    richest = p;
+                }
+            }
+        }
+        if (richest==null)throw new RuntimeException("Richest not found");
+        return richest;
+    }
+
+    public Player[] getPlayers() {
+        return players;
+    }
 }

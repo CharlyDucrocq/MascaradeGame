@@ -68,6 +68,7 @@ public class GameRound extends Observable {
 
     private void endTurn(){
         isEnded = true;
+        setChanged();
         notifyObservers();
     }
 

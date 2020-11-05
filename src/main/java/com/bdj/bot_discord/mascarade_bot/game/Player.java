@@ -25,4 +25,18 @@ public class Player {
     public User getUser() {
         return user;
     }
+
+    public Purse getPurse() {
+        return purse;
+    }
+
+    public void setPurse(Purse purse) {
+        this.purse = purse;
+    }
+
+    public boolean endTheGame() {
+        if (purse.isEmpty()) return true;
+        if (purse.getValue()>=GlobalParameter.GLOBAL_GOAL) return true;
+        return false;
+    }
 }
