@@ -1,9 +1,17 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
 import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.mascarade_bot.game.card.Card;
+import com.bdj.bot_discord.mascarade_bot.game.card.CardCreator;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
 import org.junit.jupiter.api.*;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.LinkedList;
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -12,6 +20,8 @@ public class GameTest {
 
     Game game;
     User[] users;
+    Player[] players;
+    InOutGameInterface inOutMock;
 
 
     @BeforeEach
@@ -24,8 +34,10 @@ public class GameTest {
             else lobby.addPlayer(users[i]);
         }
         game = lobby.createGame();
-        game.setInOut(mock(InOutGameInterface.class));
+        inOutMock = mock(InOutGameInterface.class);
+        game.setInOut(inOutMock);
         game.start();
+        players = game.getTable().getPlayers();
     }
 
     @Test
@@ -85,8 +97,10 @@ public class GameTest {
     void peekTest(){
         passPreliminaryRounds();
         GameRound round = game.getRound();
+        User user = round.getUser();
+        clearInvocations(inOutMock);
         round.peekCharacter();
-        // TODO check
+        verify(inOutMock,atLeast(1)).printPersonalMsg(eq(user),anyString());
     }
 
     @Test
@@ -124,17 +138,129 @@ public class GameTest {
     }
 
     @Test
-    void useCharacterTest(){
+    void timeBeforeUseTest(){
         passPreliminaryRounds();
         GameRound round = game.getRound();
-        /**  TODO
-         * round.setCharacterToUse(///);
-         * round.useCharacter();
-         * tests...
-         */
+        round.setCharacterToUse(Character.JUDGE);
+        Instant instant =round.characterChoiceInstant;
+        assertThrows(RuntimeException.class, round::useCharacter);
+        round.characterChoiceInstant=instant.minus(GlobalParameter.CHOICE_USE_TIME_IN_SEC/2, ChronoUnit.SECONDS);
+        assertThrows(RuntimeException.class, round::useCharacter);
+        round.characterChoiceInstant=instant.minus(GlobalParameter.CHOICE_USE_TIME_IN_SEC, ChronoUnit.SECONDS);
+        assertDoesNotThrow(round::useCharacter);
+    }
+
+    @Test
+    void characterSelectionTest(){
+        passPreliminaryRounds();
+        GameRound round = game.getRound();
+        assertThrows(RuntimeException.class,()->round.setCharacterToUse(Character.NEVER_ON_GAME));
+        assertDoesNotThrow(()->round.setCharacterToUse(Character.JUDGE));
+        assertEquals(Character.JUDGE, round.charaChose);
+    }
+
+    @Test
+    void useCharacterWhenTrueAndNoContest(){
+        passPreliminaryRounds();
+        GameRound round = game.getRound();
+        CardCreator mockChar = mock(CardCreator.class);
+        Card mockCard = mock(Card.class);
+        when(mockChar.getCard(any(),any())).thenReturn(mockCard);
+        when(mockCard.getType()).thenReturn(round.player.getCurrentCharacter());
+        round.setCharacterToUse(round.player.getCurrentCharacter());
+        passRoundTime(round);
+        round.useCharacterOnlyForTest(mockChar);
+        verify(mockChar,times(1)).getCard(eq(round.player), any());
+        verify(mockCard,times(1)).action();
+    }
+
+    @Test
+    void useCharacterWhenFakeAndNoContest(){
+        passPreliminaryRounds();
+        GameRound round = game.getRound();
+        CardCreator mockChar = mock(CardCreator.class);
+        Card mockCard = mock(Card.class);
+        when(mockChar.getCard(any(),any())).thenReturn(mockCard);
+        when(mockCard.getType()).thenReturn(game.getTable().getPrev().getCurrentCharacter());
+        round.setCharacterToUse(game.getTable().getPrev().getCurrentCharacter());
+        passRoundTime(round);
+        round.useCharacterOnlyForTest(mockChar);
+
+        verify(mockChar,times(1)).getCard(eq(round.player), any());
+        verify(mockCard,times(1)).action();
+    }
+
+    @Test
+    void useCharacterWhenFalseAndSomeContest(){
+        passPreliminaryRounds();
+        GameRound round = game.getRound();
+        Player player = round.player;
+        Player trueRole = game.getTable().getPrev();
+
+        int HOW_MANY_CONTEST = 3;
+        List<Player> contestators = new LinkedList<>();
+        for(int i=0;contestators.size()<HOW_MANY_CONTEST-1;i++){
+            if(players[i]!=player && players[i]!=trueRole) contestators.add(players[i]);
+        }
+        contestators.add(trueRole);
+
+        game.setBankOnlyForTest(mock(Bank.class));
+        CardCreator mockChar = mock(CardCreator.class);
+        Card mockCard = mock(Card.class);
+        when(mockChar.getCard(any(),any())).thenReturn(mockCard);
+        when(mockCard.getType()).thenReturn(trueRole.getCurrentCharacter());
+
+        round.setCharacterToUse(trueRole.getCurrentCharacter());
+        for (Player contestator : contestators) round.contest(contestator);
+        passRoundTime(round);
+        round.useCharacterOnlyForTest(mockChar);
+
+        verify(mockChar,times(1)).getCard(eq(trueRole), any());
+        verify(mockCard,times(1)).action();
+
+        verify(game.getBank(), times(1)).takeTaxFrom(eq(player));
+        for (Player contestator : contestators)
+            if(contestator!=trueRole)
+                verify(game.getBank(), times(1)).takeTaxFrom(eq(contestator));
+    }
+
+    @Test
+    void useCharacterWhenTrueAndSomeContest(){
+        passPreliminaryRounds();
+        GameRound round = game.getRound();
+        Player player = round.player;
+
+        int HOW_MANY_CONTEST = 3;
+        List<Player> contestators = new LinkedList<>();
+        for(int i=0;contestators.size()<HOW_MANY_CONTEST;i++){
+            if(players[i]!=player) contestators.add(players[i]);
+        }
+
+        game.setBankOnlyForTest(mock(Bank.class));
+        CardCreator mockChar = mock(CardCreator.class);
+        Card mockCard = mock(Card.class);
+        when(mockChar.getCard(any(),any())).thenReturn(mockCard);
+        when(mockCard.getType()).thenReturn(player.getCurrentCharacter());
+
+        round.setCharacterToUse(player.getCurrentCharacter());
+        for (Player contestator : contestators) round.contest(contestator);
+        passRoundTime(round);
+        round.useCharacterOnlyForTest(mockChar);
+
+        verify(mockChar,times(1)).getCard(eq(player), any());
+        verify(mockCard,times(1)).action();
+
+        for (Player contestator : contestators)
+            verify(game.getBank(), times(1)).takeTaxFrom(eq(contestator));
+    }
+
+    private static void passRoundTime(GameRound round) {
+        round.characterChoiceInstant=round.characterChoiceInstant.minus(GlobalParameter.CHOICE_USE_TIME_IN_SEC, ChronoUnit.SECONDS);
     }
 
     private void passPreliminaryRounds(){
-        //TODO
+        while (game.isInPreliminary())
+            game.nextRound();
+        game.nextRound();
     }
 }
