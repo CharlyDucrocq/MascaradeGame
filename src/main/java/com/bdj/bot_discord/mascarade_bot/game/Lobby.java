@@ -7,28 +7,37 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Lobby {
-    List<Player> players = new LinkedList<>();
-    Player admin;
+    List<User> users = new LinkedList<>();
+    User admin;
 
     public void addPlayer(User user){
-        if(players.size()==GlobalParameter.MAX_PLAYERS) throw new GameFullException();
-        players.add(new Player(user));
+        if(users.size()==GlobalParameter.MAX_PLAYERS) throw new GameFullException();
+        users.add(user);
     }
 
-    public void addAdmin(User user){
-        admin = new Player(user);
-        players.add(admin);
+    public boolean removePlayer(User user){
+        return users.remove(user);
+    }
+
+    public boolean contain(User user){
+        return users.contains(user);
+    }
+
+    public void setAdmin(User user){
+        admin = user;
     }
 
     public Game createGame(){
+        List<Player> players = new LinkedList<>();
+        for (User user : this.users) players.add(new Player(user));
         return new GameFactory(players).createGame();
     }
 
     public boolean haveEnoughPlayer(){
-        return players.size()>=GlobalParameter.MIN_PLAYERS;
+        return users.size()>=GlobalParameter.MIN_PLAYERS;
     }
 
     public boolean isAdmin(User user) {
-        return user.equals(admin.getUser());
+        return user.equals(admin);
     }
 }

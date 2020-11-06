@@ -17,6 +17,8 @@ public class Game {
     private InOutGameInterface inOut;
     private MascaradeOut out;
 
+    public boolean ended = false;
+
     private Bank bank = new Bank();
 
     public Game(Player[] players){
@@ -41,11 +43,13 @@ public class Game {
     }
 
     private void endGame() {
+        ended = true;
         out.printEnd(this);
         out.printPodium(tableRound);
     }
 
     private boolean ended() {
+        if (this.ended) return true;
         for(Player player : tableRound.getPlayers()){
             if (player.endTheGame()) return true;
         }

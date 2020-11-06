@@ -10,12 +10,8 @@ import com.bdj.bot_discord.mascarade_bot.game.Lobby;
 import com.bdj.bot_discord.mascarade_bot.game.Player;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import com.bdj.bot_discord.mascarade_bot.main.Application;
-import com.bdj.bot_discord.mascarade_bot.utils.choice.character.CharacterChoice;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
-import com.bdj.bot_discord.mascarade_bot.utils.choice.user.UserQuestion;
 import com.bdj.bot_discord.mascarade_bot.utils.UserList;
-import com.bdj.bot_discord.mascarade_bot.utils.choice.YesOrNoQuestion;
 
 import java.util.Random;
 
@@ -31,13 +27,17 @@ public class CommandAction {
         inOut.setGlobalChannel(event.getMessage().getChannel());
         User user = getUser(event);
         lobby = new Lobby();
-        lobby.addAdmin(user);
+        lobby.setAdmin(user);
+        inOut.printGlobalMsg("Partie créée. Admin : "+user.toString());
     }
 
     public static void join(MessageReceivedEvent event){
         if(lobby == null) throw new NoGameCreated();
         User user = getUser(event);
-        lobby.addPlayer(user);
+        if(!lobby.removePlayer(user)){
+            lobby.addPlayer(user);
+            inOut.printGlobalMsg(user.toString()+" a rejoin la partie");
+        } else inOut.printGlobalMsg(user.toString()+" a quitté la partie");
     }
 
     public static void start(MessageReceivedEvent event){
@@ -114,6 +114,7 @@ public class CommandAction {
 
     private static Game getGame(){
         if(game == null) throw new NoGameStarted();
+        if(game.ended) throw new RuntimeException("Game Ended ! Please restart the game.");
         return game;
     }
 

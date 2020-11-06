@@ -55,6 +55,7 @@ public class Player {
         if (this == o) return true;
         if (o == null) return false;
         if (o instanceof String) return user.equals(o);
+        if (o instanceof User) return user.equals(o);
         if (getClass() != o.getClass()) return false;
         Player player = (Player) o;
         return currentCharacter == player.currentCharacter &&
