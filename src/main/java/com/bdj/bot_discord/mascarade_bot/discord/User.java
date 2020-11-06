@@ -5,36 +5,41 @@ import net.dv8tion.jda.api.entities.Member;
 import java.util.Objects;
 
 public class User {
-    private Member member;
+    private net.dv8tion.jda.api.entities.User user;
 
-    public User(Member member){
-        this.member = member;
+    public User(net.dv8tion.jda.api.entities.User user){
+        this.user = user;
     }
 
     public String getName() {
-        return member.getNickname();
+        return user.getName();
     }
 
     public void sendMessage(String message) {
-        member.getDefaultChannel().sendMessage(message);
+        user.openPrivateChannel().complete().sendMessage(message).queue();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
-        if (o instanceof String) {
-            String name = ((String) o).toLowerCase();
-            return (member.getNickname() !=null && name.equals(member.getNickname().toLowerCase()))
-                    || name.equals(member.getEffectiveName().toLowerCase());
-        }
+//        if (o instanceof String) {
+//            String name = ((String) o).toLowerCase();
+//            return (member.getNickname() !=null && name.equals(member.getNickname().toLowerCase()))
+//                    || name.equals(member.getEffectiveName().toLowerCase());
+//        }
         if (getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(member, user.member);
+        return Objects.equals(this.user, user.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(member);
+        return Objects.hash(user);
+    }
+
+    @Override
+    public String toString() {
+        return getName();
     }
 }

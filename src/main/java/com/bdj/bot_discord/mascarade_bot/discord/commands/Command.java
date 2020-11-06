@@ -40,6 +40,6 @@ public enum Command {
     }
 
     public String getDescription(){
-        return "";
+        return description;
     }
 }

@@ -9,7 +9,7 @@ public class InOutDiscord implements InOutGameInterface {
 
     @Override
     public void printGlobalMsg(String message) {
-        globalChannel.sendMessage(message);
+        globalChannel.sendMessage(message).queue();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class InOutDiscord implements InOutGameInterface {
 
     @Override
     public void printError(Exception e) {
-        globalChannel.sendMessage("*ERROR : "+e.getMessage()+"*");
+        globalChannel.sendMessage("*ERROR : "+e.getMessage()+"*").queue();
     }
 
     public void setGlobalChannel(MessageChannel channel) {

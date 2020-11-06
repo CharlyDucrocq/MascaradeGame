@@ -15,9 +15,7 @@ import javax.security.auth.login.LoginException;
 public class Application extends ListenerAdapter {
     private UserList userList = new UserList();
 
-    public
-
-    Application() {
+    public Application() {
         super();
         CommandAction.app = this;
         CommandAction.inOut = new InOutDiscord();
@@ -26,19 +24,24 @@ public class Application extends ListenerAdapter {
 
     @Override
     public synchronized void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+        if(event.getAuthor().isBot()) return;
+        System.out.println(event.getMessage().getContentRaw());
         for(Command command : Command.values()){
-            if (command.isUsedIn(event.getMessage().getContentRaw().toLowerCase()))
+            if (command.isUsedIn(event.getMessage().getContentRaw().toLowerCase())){
                 try {
                     command.doCommand(event);
                 } catch (GameException e){
-                    CommandAction.inOut.printError(e);
+                    event.getChannel().sendMessage(e.getMessage()).queue();
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
+            }
         }
     }
 
     public static void main(String[] argv) throws LoginException {
         JDABuilder builder = new JDABuilder(AccountType.BOT);
-        builder.setToken(argv[1]);
+        builder.setToken("NzY3NzA0OTU0NDQ1MTAzMTI0.X41y9A.OdfngDcSDCWMbJPH3fr3nabUtNo");
         builder.addEventListeners(new Application());
         builder.build();
     }

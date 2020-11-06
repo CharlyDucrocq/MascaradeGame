@@ -123,7 +123,7 @@ public class CommandAction {
     }
 
     private static User getUser(MessageReceivedEvent event) {
-        return userList.getUser(new User(event.getMember()));
+        return userList.getUser(new User(event.getAuthor()));
     }
 
     public static void recapPlayer(MessageReceivedEvent messageReceivedEvent) {
@@ -141,5 +141,6 @@ public class CommandAction {
         for (Command command : Command.values()) {
             toString+= " - "+String.join("/",command.getEventCommands())+" : "+command.getDescription()+"\n";
         }
+        event.getChannel().sendMessage(toString).queue();//TODO
     }
 }
