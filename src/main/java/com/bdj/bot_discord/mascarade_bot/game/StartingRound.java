@@ -10,21 +10,25 @@ public class StartingRound extends GameRound {
 
     @Override
     public void setCharacterToUse(Character c){
-        throw new ActionNotAllowed();
+        throw getError();
     }
 
     @Override
     public void peekCharacter(){
-        throw new ActionNotAllowed();
+        throw getError();
     }
 
     @Override
     public void useCharacter(){
-        throw new ActionNotAllowed();
+        throw getError();
     }
 
     @Override
     public void contest(Player opponent){
-        throw new ActionNotAllowed();
+        throw getError();
+    }
+
+    private ActionNotAllowed getError(){
+        return new ActionNotAllowed("Vous ne pouvez pas faire ca mtn : Vous ne pouvez qu'échanger vos cartes pour l'instant");
     }
 }
