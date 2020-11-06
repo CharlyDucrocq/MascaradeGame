@@ -34,7 +34,7 @@ public class Game {
             endGame();
             return;
         }
-        if (nbStartingTurn>tableRound.getNbTurnDone())
+        if (isInPreliminary())
             round = new StartingRound(this, tableRound.next());
         else
             round = new GameRound(this, tableRound.next());
@@ -85,11 +85,19 @@ public class Game {
         return bank;
     }
 
+    public void setBankOnlyForTest(Bank bank) {
+        this.bank = bank;
+    }
+
     public TableRound getTable() {
         return tableRound;
     }
 
     public MascaradeOut getOut() {
         return out;
+    }
+
+    public boolean isInPreliminary() {
+        return nbStartingTurn>tableRound.getNbTurnDone();
     }
 }

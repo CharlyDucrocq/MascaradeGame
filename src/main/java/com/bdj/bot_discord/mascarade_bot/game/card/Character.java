@@ -2,9 +2,8 @@ package com.bdj.bot_discord.mascarade_bot.game.card;
 
 import com.bdj.bot_discord.mascarade_bot.game.Game;
 import com.bdj.bot_discord.mascarade_bot.game.Player;
-import com.bdj.bot_discord.mascarade_bot.utils.ResourcesAccess;
 
-public enum Character {
+public enum Character implements CardCreator {
     JUDGE(
             "Juge",
             "Récupère toutes les pièces payés en amende à la banque",
@@ -40,19 +39,24 @@ public enum Character {
             "Mendiant",
             "Ne peut rien faire si ce n'est que mendier",
             Beggar::create
-    )
-    /*,
+    ),
+    /*
     SPY,
     PEASANT,
     JOKER,
     CHEATER,
     WIDOW,
     INQUISITOR*/
+    NEVER_ON_GAME() //only for test
     ;
 
     private String frenchName;
     private String description;
     private CardCreator creator;
+
+    Character(){
+        //only for test
+        }
 
     Character(String nom, String describ, CardCreator creator){
         this.frenchName = nom;
@@ -60,16 +64,28 @@ public enum Character {
         this.creator = creator;
     }
 
+    public static Character getFromText(String firstParam) {
+        for (Character character : values()){
+            if(character.equivalentTo(firstParam)) return character;
+        }
+        return null;
+    }
+
     public String getDescription() {
         return description;
     }
 
     public Card getCard(Player player, Game game){
-        return creator.create(player, game);
+        return creator.getCard(player, game);
     }
 
     @Override
     public String toString() {
         return frenchName;
+    }
+
+    public boolean equivalentTo(String txt){
+        txt = txt.toLowerCase();
+        return txt.equals(frenchName) || txt.equals(name().toLowerCase());
     }
 }

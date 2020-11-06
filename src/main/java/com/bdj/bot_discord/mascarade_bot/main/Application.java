@@ -25,7 +25,7 @@ public class Application extends ListenerAdapter {
     }
 
     @Override
-    public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+    public synchronized void onMessageReceived(@Nonnull MessageReceivedEvent event) {
         for(Command command : Command.values()){
             if (command.isUsedIn(event.getMessage().getContentRaw().toLowerCase()))
                 try {

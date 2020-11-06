@@ -4,5 +4,5 @@ import com.bdj.bot_discord.mascarade_bot.game.Game;
 import com.bdj.bot_discord.mascarade_bot.game.Player;
 
 public interface CardCreator {
-    Card create(Player player, Game game);
+    Card getCard(Player player, Game game);
 }

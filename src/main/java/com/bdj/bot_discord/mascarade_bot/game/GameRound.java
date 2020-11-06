@@ -1,9 +1,13 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
 import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.mascarade_bot.errors.ActionNotAllowed;
 import com.bdj.bot_discord.mascarade_bot.game.card.Card;
+import com.bdj.bot_discord.mascarade_bot.game.card.CardCreator;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +19,8 @@ public class GameRound {
 
     Player player;
     List<Player> contestPlayers = new LinkedList<>();
-    Character charaChose;
+    CardCreator charaChose;
+    Instant characterChoiceInstant;
 
     boolean isEnded = false;
 
@@ -36,6 +41,9 @@ public class GameRound {
     }
 
     public void setCharacterToUse(Character c){
+        if(!game.getCharactersList().contains(c))
+            throw new RuntimeException("Le personnage n'est pas dans la partie");
+        characterChoiceInstant = Instant.now();
         charaChose = c;
         out.printSetCharacter(this);
     }
@@ -51,24 +59,42 @@ public class GameRound {
             player.setCurrentCharacter(otherPlayer.getCurrentCharacter());
             otherPlayer.setCurrentCharacter(c);
         }
-        out.printPublicSwitch(player, otherPlayer);
+        out.printSwitch(player, otherPlayer, really);
         endTurn();
     }
 
     public void useCharacter(){
+        useCharacterOnlyForTest(charaChose); // separated for test
+    }
+
+    void useCharacterOnlyForTest(CardCreator creator){
+        if (charaChose==null)
+            throw new RuntimeException("Le personnage doit être definie avant !");
+
+        long timeLeft = GlobalParameter.CHOICE_USE_TIME_IN_SEC-Duration.between(characterChoiceInstant,Instant.now()).getSeconds();
+        if(timeLeft>0) throw new RuntimeException("Il reste "+timeLeft+" avant de pouvoir utilisé l'action");
+
+        if(contestPlayers.isEmpty()){
+            Card card = creator.getCard(player,game);
+            card.action();
+            out.printAction(player,card);
+            endTurn();
+            return;
+        }
+
         contestPlayers.add(0, player);
 
         // sort to place the one who have the character in the first place
         contestPlayers.sort(Comparator.comparing(
-                p -> Math.abs(player.getCurrentCharacter().ordinal()-charaChose.ordinal())));
+                p -> player.getCurrentCharacter() == charaChose ? 0:1));
 
         for (Player p : contestPlayers) {
             if (p.getCurrentCharacter() == charaChose) {
-                Card card = charaChose.getCard(p,game);
+                Card card = creator.getCard(p,game);
                 card.action();
                 out.printAction(p,card);
             } else {
-                player.payPenalty(game.getBank());
+                p.payPenalty(game.getBank());
                 out.printPenality(p);
             }
         }

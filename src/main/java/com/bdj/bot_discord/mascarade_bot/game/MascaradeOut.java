@@ -53,7 +53,11 @@ public class MascaradeOut {
         inOut.printGlobalMsg("C'est au tour de "+gameRound.player.toString());
     }
 
-    public void printPublicSwitch(Player player, Player other){
+    public void printSwitch(Player player, Player other, boolean trueOrNot){
+        if(trueOrNot)
+            inOut.printPersonalMsg(player.getUser(),"Vous avez vraiment fait l'échange avec "+other.toString());
+        else
+            inOut.printPersonalMsg(player.getUser(),"Vous n'avez pas fait l'échange avec "+other.toString());
         inOut.printGlobalMsg(player.toString()+" échange (ou pas) ses cartes avec "+other.toString());
     }
 
@@ -72,8 +76,8 @@ public class MascaradeOut {
 
     public void printAction(Player player, Card charaChose) {
         inOut.printGlobalMsg(
-                player.toString()+" utilise le pouvoir "+charaChose.type.toString()+"\n" +
-                        "("+charaChose.type.getDescription()+")"
+                player.toString()+" utilise le pouvoir "+charaChose.getType().toString()+"\n" +
+                        "("+charaChose.getType().getDescription()+")"
         );
     }
 

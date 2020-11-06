@@ -3,6 +3,8 @@ package com.bdj.bot_discord.mascarade_bot.game;
 import com.bdj.bot_discord.mascarade_bot.discord.User;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 
+import java.util.Objects;
+
 public class Player {
     private Character currentCharacter;
     private Purse purse = new Purse();
@@ -11,7 +13,6 @@ public class Player {
 
     Player(User user){
         this.user = user;
-        //TODO
     }
 
     public void setCurrentCharacter(Character c) {
@@ -41,11 +42,28 @@ public class Player {
     }
 
     public void payPenalty(Bank bank) {
-        bank.give(purse.removeCoin(-1));
+        bank.takeTaxFrom(this);
     }
 
     @Override
     public String toString() {
         return user.getName()+"("+purse.getValue()+"£)";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if (o instanceof String) return user.equals(o);
+        if (getClass() != o.getClass()) return false;
+        Player player = (Player) o;
+        return currentCharacter == player.currentCharacter &&
+                Objects.equals(purse, player.purse) &&
+                Objects.equals(user, player.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currentCharacter, purse, user);
     }
 }

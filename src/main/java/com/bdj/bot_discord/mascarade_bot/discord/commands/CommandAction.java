@@ -17,12 +17,15 @@ import com.bdj.bot_discord.mascarade_bot.utils.choice.user.UserQuestion;
 import com.bdj.bot_discord.mascarade_bot.utils.UserList;
 import com.bdj.bot_discord.mascarade_bot.utils.choice.YesOrNoQuestion;
 
+import java.util.Random;
+
 public class CommandAction {
     public static Application app;
     public static InOutDiscord inOut;
     private static Lobby lobby;
     private static Game game;
     public static UserList userList;
+    public static Random random;
 
     public static void create(MessageReceivedEvent event) {
         inOut.setGlobalChannel(event.getMessage().getChannel());
@@ -50,18 +53,23 @@ public class CommandAction {
         User userWhoAsk = getUser(event);
         GameRound round = getActualRound();
         if(!userWhoAsk.equals(round.getUser())) throw new BadUser();
-        UserQuestion userChoice = new UserQuestion(
-                "Avec qui voulez-vous échanger (ou pas) ?",
-                getGame().getUsers() ,
-                otherUser ->{
-                    Player otherPlayer = getGame().getPlayer(otherUser);
-                    YesOrNoQuestion yesOrNo = new YesOrNoQuestion(
-                            "Voulez-vous réellement échanger les cartes ?",
-                            () -> round.switchCard(otherPlayer, true),
-                            () -> round.switchCard(otherPlayer, false));
-                    inOut.askChoiceTo(userWhoAsk,yesOrNo);
-                });
-        inOut.askChoiceTo(userWhoAsk,userChoice);
+        String name = extractFirstParameter(event.getMessage().getContentRaw());
+        Player player = getGame().getTable().getPlayerByName(name);
+        if (player==null) throw new InvalidCommand();
+        getActualRound().switchCard(player, random.nextBoolean());
+
+//        UserQuestion userChoice = new UserQuestion(
+//                "Avec qui voulez-vous échanger (ou pas) ?",
+//                getGame().getUsers() ,
+//                otherUser ->{
+//                    Player otherPlayer = getGame().getPlayer(otherUser);
+//                    YesOrNoQuestion yesOrNo = new YesOrNoQuestion(
+//                            "Voulez-vous réellement échanger les cartes ?",
+//                            () -> round.switchCard(otherPlayer, true),
+//                            () -> round.switchCard(otherPlayer, false));
+//                    inOut.askChoiceTo(userWhoAsk,yesOrNo);
+//                });
+//        inOut.askChoiceTo(userWhoAsk,userChoice);
     }
 
     public static void peekAction(MessageReceivedEvent event){
@@ -71,12 +79,28 @@ public class CommandAction {
         getActualRound().peekCharacter();
     }
 
+    public static void characterChoice(MessageReceivedEvent event) {
+        User user = getUser(event);
+        GameRound round = getActualRound();
+        if(!user.equals(round.getUser())) throw new BadUser();
+        String firstParam = extractFirstParameter(event.getMessage().getContentRaw());
+        Character choice = Character.getFromText(firstParam);
+        if (choice==null) throw new InvalidCommand();
+        getActualRound().setCharacterToUse(choice);
+    }
+
+    private static String extractFirstParameter(String msg) {
+        String[] tab1 = msg.split("[!][A-Za-z]+");
+        if(tab1.length!=2) throw new InvalidCommand();
+        String[] tab2 = tab1[1].split(" ");
+        return tab2[1];
+    }
+
     public static void characterAction(MessageReceivedEvent event){
         User user = getUser(event);
         GameRound round = getActualRound();
         if(!user.equals(round.getUser())) throw new BadUser();
-
-        // TODO
+        getActualRound().useCharacter();
     }
 
     public static void contestAction(MessageReceivedEvent event){
@@ -109,5 +133,12 @@ public class CommandAction {
     public static void recapCharacter(MessageReceivedEvent messageReceivedEvent) {
         Game game = getGame();
         game.getOut().printCharactersRecap(game.getCharactersList());
+    }
+
+    public static void helpMsg(MessageReceivedEvent event) {
+        String toString = "";
+        for (Command command : Command.values()) {
+            toString+= " - "+String.join("/",command.getEventCommands())+" : "+command.getDescription()+"\n";
+        }
     }
 }

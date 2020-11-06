@@ -85,4 +85,11 @@ public class TableRound {
     public Player[] getPlayers() {
         return players;
     }
+
+    public Player getPlayerByName(String name) {
+        for (Player player : players)
+            if (player.equals(name))
+                return player;
+        return null;
+    }
 }
