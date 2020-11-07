@@ -1,5 +1,7 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
+import com.bdj.bot_discord.mascarade_bot.errors.GameException;
+import com.bdj.bot_discord.mascarade_bot.errors.NotEnoughPlayers;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 
 import java.util.LinkedList;
@@ -24,6 +26,14 @@ public class GameFactory {
         List<Character> characters = new LinkedList<>();
         characters.add(JUDGE);
         switch (players.length){
+            case 6 : {
+                characters.add(BISHOP);
+                characters.add(KING);
+                characters.add(QUEEN);
+                characters.add(WITCH);
+                characters.add(CHEATER);
+                break;
+            }
             case 7 : {
                 characters.add(BISHOP);
                 characters.add(KING);
@@ -31,14 +41,25 @@ public class GameFactory {
                 characters.add(WITCH);
                 characters.add(BEGGAR);
                 characters.add(THIEF);
-            }
-            default: {
-                if(characters.size()==1) return null;
-                for(Player p : players){
-                    p.setCurrentCharacter(characters.remove(random.nextInt(characters.size())));
-                }
                 break;
             }
+            case 8 : {
+                characters.add(BISHOP);
+                characters.add(KING);
+                characters.add(QUEEN);
+                characters.add(WITCH);
+                characters.add(PEASANT);
+                characters.add(PEASANT);
+                characters.add(THIEF);
+                break;
+            }
+            default: {
+                throw new GameException("Mauvais nombre de joueurs");
+            }
+        }
+        if(characters.size()==1) return null;
+        for(Player p : players){
+            p.setCurrentCharacter(characters.remove(random.nextInt(characters.size())));
         }
         return new Game(players);
     }

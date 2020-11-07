@@ -2,6 +2,7 @@ package com.bdj.bot_discord.mascarade_bot.game;
 
 import com.bdj.bot_discord.mascarade_bot.discord.User;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
+import com.bdj.bot_discord.mascarade_bot.game.card.Cheater;
 
 import java.util.Objects;
 
@@ -9,6 +10,8 @@ public class Player {
     private Character currentCharacter;
     private Purse purse = new Purse();
     private User user;
+
+    boolean haveWin = false;
 
 
     Player(User user){
@@ -36,6 +39,7 @@ public class Player {
     }
 
     public boolean endTheGame() {
+        if(haveWin) return true;
         if (purse.isEmpty()) return true;
         if (purse.getValue()>=GlobalParameter.GLOBAL_GOAL) return true;
         return false;
@@ -66,5 +70,9 @@ public class Player {
     @Override
     public int hashCode() {
         return Objects.hash(currentCharacter, purse, user);
+    }
+
+    public void cheat() {
+        if(purse.getValue()>= Cheater.GOAL_FOR_WIN) haveWin = true;
     }
 }

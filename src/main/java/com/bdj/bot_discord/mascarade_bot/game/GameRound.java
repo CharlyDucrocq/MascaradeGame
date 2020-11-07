@@ -75,7 +75,7 @@ public class GameRound {
         long timeLeft = GlobalParameter.CHOICE_USE_TIME_IN_SEC-Duration.between(characterChoiceInstant,Instant.now()).getSeconds();
         if(timeLeft>0) throw new GameException("Il reste "+timeLeft+" avant de pouvoir utilisé l'action");
 
-        if(contestPlayers.isEmpty()){
+        if(noContestPlayers()){
             Card card = creator.getCard(player,game);
             card.action();
             out.printAction(player,card);
@@ -118,5 +118,17 @@ public class GameRound {
 
     public Game getGame() {
         return game;
+    }
+
+    public boolean noContestPlayers(){
+        return contestPlayers.isEmpty();
+    }
+
+    public int howManyIn(Character peasant) {
+        int count=0;
+        for (Player player : contestPlayers){
+            if(player.getCurrentCharacter()==peasant) count++;
+        }
+        return count;
     }
 }

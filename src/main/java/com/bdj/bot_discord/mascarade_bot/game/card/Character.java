@@ -40,11 +40,19 @@ public enum Character implements CardCreator {
             "Ne peut rien faire si ce n'est que mendier",
             Beggar::create
     ),
+    PEASANT(
+            "Paysan",
+            "Si un autre paysan s'est annoncé, gagne 2 piece, sinon 1",
+            Peasant::create
+    ),
+    CHEATER(
+            "Tricheur",
+            "Si le joueur a 10 pieces ou plus, il gagne la partie et y met fin",
+            Cheater::create
+    ),
     /*
     SPY,
-    PEASANT,
     JOKER,
-    CHEATER,
     WIDOW,
     INQUISITOR*/
     NEVER_ON_GAME() //only for test
