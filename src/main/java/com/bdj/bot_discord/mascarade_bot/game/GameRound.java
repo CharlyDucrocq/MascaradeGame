@@ -2,6 +2,7 @@ package com.bdj.bot_discord.mascarade_bot.game;
 
 import com.bdj.bot_discord.mascarade_bot.discord.User;
 import com.bdj.bot_discord.mascarade_bot.errors.ActionNotAllowed;
+import com.bdj.bot_discord.mascarade_bot.errors.GameException;
 import com.bdj.bot_discord.mascarade_bot.game.card.Card;
 import com.bdj.bot_discord.mascarade_bot.game.card.CardCreator;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
@@ -42,7 +43,7 @@ public class GameRound {
 
     public void setCharacterToUse(Character c){
         if(!game.getCharactersList().contains(c))
-            throw new RuntimeException("Le personnage n'est pas dans la partie");
+            throw new GameException("Le personnage n'est pas dans la partie");
         characterChoiceInstant = Instant.now();
         charaChose = c;
         out.printSetCharacter(this);
@@ -69,10 +70,10 @@ public class GameRound {
 
     void useCharacterOnlyForTest(CardCreator creator){
         if (charaChose==null)
-            throw new RuntimeException("Le personnage doit être definie avant !");
+            throw new GameException("Le personnage doit être definie avant !");
 
         long timeLeft = GlobalParameter.CHOICE_USE_TIME_IN_SEC-Duration.between(characterChoiceInstant,Instant.now()).getSeconds();
-        if(timeLeft>0) throw new RuntimeException("Il reste "+timeLeft+" avant de pouvoir utilisé l'action");
+        if(timeLeft>0) throw new GameException("Il reste "+timeLeft+" avant de pouvoir utilisé l'action");
 
         if(contestPlayers.isEmpty()){
             Card card = creator.getCard(player,game);

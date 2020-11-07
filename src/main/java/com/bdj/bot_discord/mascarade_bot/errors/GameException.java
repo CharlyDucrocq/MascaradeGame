@@ -1,10 +1,10 @@
 package com.bdj.bot_discord.mascarade_bot.errors;
 
-public abstract class GameException extends RuntimeException {
-    GameException(){
+public class GameException extends RuntimeException {
+    public GameException(){
         super();
     }
-    GameException(String msg){
+    public GameException(String msg){
         super(msg);
     }
 }

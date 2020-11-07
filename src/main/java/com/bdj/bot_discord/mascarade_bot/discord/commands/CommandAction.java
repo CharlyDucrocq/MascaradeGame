@@ -114,7 +114,7 @@ public class CommandAction {
 
     private static Game getGame(){
         if(game == null) throw new NoGameStarted();
-        if(game.ended) throw new RuntimeException("Game Ended ! Please restart the game.");
+        if(game.ended) throw new GameException("Game Ended ! Please restart the game.");
         return game;
     }
 
