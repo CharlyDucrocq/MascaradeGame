@@ -13,6 +13,8 @@ import com.bdj.bot_discord.mascarade_bot.utils.UserList;
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 
+import static com.bdj.bot_discord.mascarade_bot.main.TokenGhost.TOKEN;
+
 public class Application extends ListenerAdapter {
     private UserList userList = new UserList();
     private InOutDiscord inOut=new InOutDiscord();
@@ -42,8 +44,6 @@ public class Application extends ListenerAdapter {
     }
 
     public static void main(String[] argv) throws LoginException {
-        String TOKEN = "NzY3NzA0OTU0NDQ1MTAzMTI0.X41y9A.OdfngDcSDCWMbJPH3fr3nabUtNo";
-
         JDABuilder builder = JDABuilder.createDefault(TOKEN);
         builder.addEventListeners(new Application());
         builder.build();
