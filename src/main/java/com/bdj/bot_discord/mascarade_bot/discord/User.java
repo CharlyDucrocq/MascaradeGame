@@ -40,6 +40,6 @@ public class User {
 
     @Override
     public String toString() {
-        return getName();
+        return user.getAsMention();
     }
 }

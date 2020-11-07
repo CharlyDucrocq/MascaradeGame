@@ -1,6 +1,7 @@
 package com.bdj.bot_discord.mascarade_bot.main;
 
 import com.bdj.bot_discord.mascarade_bot.discord.InOutDiscord;
+import com.bdj.bot_discord.mascarade_bot.discord.User;
 import com.bdj.bot_discord.mascarade_bot.discord.commands.Command;
 import com.bdj.bot_discord.mascarade_bot.discord.commands.CommandAction;
 import com.bdj.bot_discord.mascarade_bot.errors.GameException;
@@ -23,7 +24,7 @@ public class Application extends ListenerAdapter {
     }
 
     @Override
-    public synchronized void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+    public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
         if(event.getAuthor().isBot()) return;
         System.out.println(event.getMessage().getContentRaw());
         for(Command command : Command.values()){
@@ -40,8 +41,9 @@ public class Application extends ListenerAdapter {
     }
 
     public static void main(String[] argv) throws LoginException {
-        JDABuilder builder = new JDABuilder(AccountType.BOT);
-        builder.setToken("NzY3NzA0OTU0NDQ1MTAzMTI0.X41y9A.OdfngDcSDCWMbJPH3fr3nabUtNo");
+        String TOKEN = "NzY3NzA0OTU0NDQ1MTAzMTI0.X41y9A.OdfngDcSDCWMbJPH3fr3nabUtNo";
+
+        JDABuilder builder = JDABuilder.createDefault(TOKEN);
         builder.addEventListeners(new Application());
         builder.build();
     }
