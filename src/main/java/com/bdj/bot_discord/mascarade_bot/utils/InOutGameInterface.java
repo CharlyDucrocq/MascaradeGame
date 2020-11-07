@@ -9,5 +9,4 @@ public interface InOutGameInterface {
     void printPersonalMsg(User user, String message);
     void countDown(int from);
     int askChoiceTo(User user, QuestionAnswers describ);
-    void printError(Exception e);
 }

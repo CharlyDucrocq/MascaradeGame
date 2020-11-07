@@ -139,7 +139,7 @@ public class CommandAction {
     public static void helpMsg(MessageReceivedEvent event) {
         String toString = "";
         for (Command command : Command.values()) {
-            toString+= " - "+String.join("/",command.getEventCommands())+" : "+command.getDescription()+"\n";
+            toString+= " **- "+String.join("/",command.getEventCommands())+" :** "+command.getDescription()+"\n";
         }
         event.getChannel().sendMessage(toString).queue();//TODO
     }

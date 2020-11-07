@@ -17,7 +17,7 @@ public class MascaradeOut {
 
     public void printStart(Game game){
         inOut.printGlobalMsg(
-                "############### *Début de la partie* ###############\n"
+                "############### **Début de la partie** ###############\n"
         );
         printCharactersRecap(game.getCharactersList());
         String partyDescription = "Configuration de départ des Joueurs :\n";
@@ -90,13 +90,13 @@ public class MascaradeOut {
 
     public void printEnd(Game game) {
         inOut.printGlobalMsg(
-                "############### *Fin de la partie* ###############\n" +
+                "############### **Fin de la partie** ###############\n" +
                 "##################################################"
         );
     }
 
     public void printPodium(TableRound tableRound) {
-        String result = "#################### *Poduim* ####################\n*";
+        String result = "#################### **Poduim** ####################\n*";
         int i=1;
         List<Player> players = Arrays.asList(tableRound.getPlayers());
         players.sort(Comparator.comparing(p->p.getPurse().getValue()));

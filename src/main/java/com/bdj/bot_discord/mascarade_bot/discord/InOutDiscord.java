@@ -28,9 +28,9 @@ public class InOutDiscord implements InOutGameInterface {
         return 0;
     }
 
-    @Override
-    public void printError(Exception e) {
-        globalChannel.sendMessage("*ERROR : "+e.getMessage()+"*").queue();
+    public void printError(Exception e, MessageChannel channel) {
+        if(channel == null) channel = this.globalChannel;
+        channel.sendMessage("```diff\n- "+"ERROR : "+e.getMessage()+"```").queue();
     }
 
     public void setGlobalChannel(MessageChannel channel) {

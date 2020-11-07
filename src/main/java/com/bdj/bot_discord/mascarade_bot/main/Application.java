@@ -15,11 +15,12 @@ import javax.security.auth.login.LoginException;
 
 public class Application extends ListenerAdapter {
     private UserList userList = new UserList();
+    private InOutDiscord inOut=new InOutDiscord();
 
     public Application() {
         super();
         CommandAction.app = this;
-        CommandAction.inOut = new InOutDiscord();
+        CommandAction.inOut = inOut;
         CommandAction.userList = this.userList;
     }
 
@@ -32,7 +33,7 @@ public class Application extends ListenerAdapter {
                 try {
                     command.doCommand(event);
                 } catch (GameException e){
-                    event.getChannel().sendMessage(e.getMessage()).queue();
+                    inOut.printError(e,event.getChannel());
                 } catch (Exception e){
                     e.printStackTrace();
                 }
