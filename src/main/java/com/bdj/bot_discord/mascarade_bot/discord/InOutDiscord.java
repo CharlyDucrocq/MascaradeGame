@@ -36,4 +36,8 @@ public class InOutDiscord implements InOutGameInterface {
     public void setGlobalChannel(MessageChannel channel) {
         this.globalChannel = channel;
     }
+
+    public boolean noChannel() {
+        return globalChannel == null;
+    }
 }

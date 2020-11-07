@@ -18,11 +18,15 @@ public class UserList {
         return user;
     }
 
+    public User getUser(String call) {
+        return containUser(call);
+    }
+
     private void addUser(User equivalent) {
         list.add(equivalent);
     }
 
-    private User containUser(User equivalent) {
+    private User containUser(Object equivalent) {
         for (User user : list) if(equivalent.equals(user)) return user;
         return null;
     }

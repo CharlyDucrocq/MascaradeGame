@@ -104,4 +104,8 @@ public class Game {
     public boolean isInPreliminary() {
         return nbStartingTurn>tableRound.getNbTurnDone();
     }
+
+    public boolean isOver() {
+        return ended;
+    }
 }

@@ -1,5 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
+import com.bdj.bot_discord.mascarade_bot.discord.InOutDiscord;
 import com.bdj.bot_discord.mascarade_bot.discord.User;
 import com.bdj.bot_discord.mascarade_bot.game.card.Card;
 import com.bdj.bot_discord.mascarade_bot.game.card.CardCreator;
@@ -21,20 +22,21 @@ public class GameTest {
     Game game;
     User[] users;
     Player[] players;
-    InOutGameInterface inOutMock;
+    InOutDiscord inOutMock;
 
 
     @BeforeEach
     void init(){
-        Lobby lobby = new Lobby();
+        inOutMock = mock(InOutDiscord.class);
+        Lobby lobby = new Lobby(inOutMock);
         users = new User[NB_PLAYERS];
         for(int i=0;i<NB_PLAYERS;i++){
             users[i] = mock(User.class);
             if(i==0) lobby.setAdmin(users[i]);
-            else lobby.addPlayer(users[i]);
+            lobby.addPlayer(users[i]);
         }
-        game = lobby.createGame();
-        inOutMock = mock(InOutGameInterface.class);
+        lobby.createGame();
+        game = lobby.game;
         game.setInOut(inOutMock);
         game.start();
         players = game.getTable().getPlayers();

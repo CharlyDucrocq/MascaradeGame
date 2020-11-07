@@ -23,11 +23,11 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null) return false;
-//        if (o instanceof String) {
-//            String name = ((String) o).toLowerCase();
-//            return (member.getNickname() !=null && name.equals(member.getNickname().toLowerCase()))
-//                    || name.equals(member.getEffectiveName().toLowerCase());
-//        }
+        if (o instanceof String) {
+            String name = ((String) o).toLowerCase();
+            return name.equals(toString())
+                    || name.equals(getName());
+        }
         if (getClass() != o.getClass()) return false;
         User user = (User) o;
         return Objects.equals(this.user, user.user);

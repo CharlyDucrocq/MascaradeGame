@@ -22,12 +22,11 @@ public class Application extends ListenerAdapter {
     public Application() {
         super();
         CommandAction.app = this;
-        CommandAction.inOut = inOut;
         CommandAction.userList = this.userList;
     }
 
     @Override
-    public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+    public synchronized void onMessageReceived(@Nonnull MessageReceivedEvent event) {
         if(event.getAuthor().isBot()) return;
         System.out.println(event.getMessage().getContentRaw());
         for(Command command : Command.values()){
@@ -37,7 +36,7 @@ public class Application extends ListenerAdapter {
                 } catch (GameException e){
                     inOut.printError(e,event.getChannel());
                 } catch (Exception e){
-                    e.printStackTrace();
+                    e.printStackTrace(System.out);
                 }
             }
         }
