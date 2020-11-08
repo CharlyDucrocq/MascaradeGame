@@ -73,6 +73,7 @@ public class GameDistributor {
     private void deleteLobby(Lobby toDelete) {
         for (User user : toDelete.getUsers()) userGame.remove(user);
         userGame.remove(toDelete.getAdmin());
+        channelGame.remove(toDelete.getInOut().getGlobalChannel());
         toDelete.getInOut().printGlobalMsg("La partie à bien été supprimé");
     }
 
