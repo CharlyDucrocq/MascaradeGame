@@ -10,7 +10,7 @@ public enum Command {
     SWITCH(CommandAction::switchAction,"Action de tour : Echanger sa carte avec un joueur (Exemple: !switch nomDuJoueur)","switch", "switchCard"),
     CHOICE(CommandAction::characterChoice, "Action de tour (en pair avec use) : Choisir un pouvoir a activé (Exemple : !choice roi)","choice","choiceCharacter"),
     USE(CommandAction::characterAction,"Action de tour (en paire avec choice) : Utiliser le pouvoir (10s minimum entre les deux commandes)","use", "useCharacter"),
-    CONTEST(CommandAction::contestAction,"Contester la carte annoncer par le joueur (a utilisé entre choice et use)","contest", "contestUse"),
+    CONTEST(CommandAction::contestAction,"Contester la carte annoncer par le joueur (a utilisé entre choice et use)","contest", "objection"),
     PLAYER_RECAP(CommandAction::recapPlayer,"Aide : Recap des Joueur et de leur bourse","gameRecap", "playerRecap"),
     CHARACTER_RECAP(CommandAction::recapCharacter,"Aide : Recap des Personnage dans le jeu","characterRecap", "actionRecap"),
     HELP(CommandAction::helpMsg,"Affichage des commandes","help","commands"),
@@ -31,7 +31,7 @@ public enum Command {
     }
 
     public boolean isUsedIn(String msg) {
-        for (String command : eventCommands) if (msg.contains("!"+command)) return true;
+        for (String command : eventCommands) if (msg.contains("!"+command.toLowerCase())) return true;
         return false;
     }
 

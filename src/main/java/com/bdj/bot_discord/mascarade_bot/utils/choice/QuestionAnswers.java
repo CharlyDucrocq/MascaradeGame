@@ -1,5 +1,7 @@
 package com.bdj.bot_discord.mascarade_bot.utils.choice;
 
+import com.bdj.bot_discord.mascarade_bot.errors.InvalidCommand;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,6 +9,8 @@ import java.util.List;
 public class QuestionAnswers {
     String question = "?";
     List<Answer> list;
+
+    boolean answered = false;
 
     public QuestionAnswers(Answer... tab){
         this.list = new LinkedList<>(Arrays.asList(tab));
@@ -24,5 +28,38 @@ public class QuestionAnswers {
     public QuestionAnswers(String question, List<Answer> list){
         this(list);
         this.question = question;
+    }
+
+    public void answer(String answer){
+        try {
+            int i = Integer.parseInt(answer);
+            if(i<=0 || i>list.size()) throw new InvalidCommand();
+            list.get(i).toDoIfChose();
+        }
+        catch (Exception e) {
+            boolean fund = false;
+            for (Answer a : list){
+                if (a.getDescription().equals(answer)) {
+                    fund = true;
+                    a.toDoIfChose();
+                }
+            }
+            if(!fund) throw new InvalidCommand();
+        }
+        answered = true;
+    }
+
+    private boolean isInt(String s){
+        try {
+            Integer.parseInt(s);
+        }
+        catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean ended() {
+        return answered;
     }
 }

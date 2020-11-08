@@ -1,11 +1,14 @@
 package com.bdj.bot_discord.mascarade_bot.discord;
 
+import com.bdj.bot_discord.mascarade_bot.errors.GameException;
+import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.util.Objects;
 
 public class User {
     private net.dv8tion.jda.api.entities.User user;
+    private QuestionAnswers questionInProgress;
 
     public User(net.dv8tion.jda.api.entities.User user){
         this.user = user;
@@ -41,5 +44,20 @@ public class User {
     @Override
     public String toString() {
         return user.getAsMention();
+    }
+
+    public void ask(QuestionAnswers question) {
+        questionInProgress = question;
+        new InOutDiscord().askChoiceTo(this,question);
+    }
+
+    public void answer(String answer){
+        if(questionInProgress==null) throw new GameException("Aucune question en cours");
+        questionInProgress.answer(answer);
+        questionInProgress = null;
+    }
+
+    public void clearQuestion() {
+        questionInProgress = null;
     }
 }

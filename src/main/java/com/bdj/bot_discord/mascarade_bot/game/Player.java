@@ -3,6 +3,7 @@ package com.bdj.bot_discord.mascarade_bot.game;
 import com.bdj.bot_discord.mascarade_bot.discord.User;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import com.bdj.bot_discord.mascarade_bot.game.card.Cheater;
+import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
 
 import java.util.Objects;
 
@@ -74,5 +75,13 @@ public class Player {
 
     public void cheat() {
         if(purse.getValue()>= Cheater.GOAL_FOR_WIN) haveWin = true;
+    }
+
+    public void ask(QuestionAnswers question) {
+        user.ask(question);
+    }
+
+    public void clearQuestion(){
+        user.clearQuestion();
     }
 }
