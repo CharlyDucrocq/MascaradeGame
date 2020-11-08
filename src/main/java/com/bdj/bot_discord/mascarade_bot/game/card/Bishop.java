@@ -22,4 +22,9 @@ public class Bishop extends Card{
     public static Card create(Player player, Game game) {
         return new Bishop(player, game.getTable());
     }
+
+    @Override
+    public String getDescription() {
+        return "Prend "+COIN_TO_SWITCH+" pieces à "+richest.toString();
+    }
 }

@@ -26,6 +26,14 @@ public class Peasant extends Card {
         return new Peasant(player, game.getRound());
     }
 
+    @Override
+    public String getDescription() {
+        if(getTwo.verif())
+            return "Gagne "+COIN_ADD_IF_TWO+" pieces avec son compagnon";
+        else
+            return "Gagne "+COIN_ADD_IF_ONE+" piece car il est seul";
+    }
+
     private static interface Verif{
         boolean verif();
     }

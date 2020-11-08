@@ -1,5 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
+import com.bdj.bot_discord.mascarade_bot.discord.InOutDiscord;
 import com.bdj.bot_discord.mascarade_bot.discord.User;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
@@ -14,7 +15,6 @@ public class Game {
 
     private TableRound tableRound;
     private GameRound round;
-    private InOutGameInterface inOut;
     private MascaradeOut out;
 
     public boolean ended = false;
@@ -66,8 +66,7 @@ public class Game {
         return round;
     }
 
-    public void setInOut(InOutGameInterface inOut) {
-        this.inOut = inOut;
+    public void setInOut(InOutDiscord inOut) {
         this.out = new MascaradeOut(inOut);
     }
 

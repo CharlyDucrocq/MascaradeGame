@@ -1,18 +1,27 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
+import com.bdj.bot_discord.mascarade_bot.discord.ColorTheme;
+import com.bdj.bot_discord.mascarade_bot.discord.CountDown;
+import com.bdj.bot_discord.mascarade_bot.discord.InOutDiscord;
+import com.bdj.bot_discord.mascarade_bot.discord.commands.Command;
 import com.bdj.bot_discord.mascarade_bot.game.card.Card;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 public class MascaradeOut {
     private InOutGameInterface inOut;
+    private MessageChannel channel;
 
-    public MascaradeOut(InOutGameInterface inOut){
+    public MascaradeOut(InOutDiscord inOut){
         this.inOut = inOut;
+        this.channel = inOut.getGlobalChannel();
     }
 
     public void printStart(Game game){
@@ -22,21 +31,26 @@ public class MascaradeOut {
         printCharactersRecap(game.getCharactersList());
         String partyDescription = "Configuration de départ des Joueurs :\n";
         for (Player player : game.getTable().getPlayers()){
-            partyDescription+= "\t" +player.toString() + " : "+player.getCurrentCharacter().toString()+"\n";
+            partyDescription+= "\t**" +player.toString() + " :** "+player.getCurrentCharacter().toString()+"\n";
         }
         inOut.printGlobalMsg(partyDescription);
     }
 
     public void printCharactersRecap(List<Character> charactersList) {
-        String charactersRecap = "Les personnages :\n";
-        for (Character character : charactersList){
-            charactersRecap+= "\t" +character.toString() + " : "+character.getDescription()+"\n";
-        }
-        inOut.printGlobalMsg(charactersRecap);
+
+        EmbedBuilder eb = new EmbedBuilder();
+
+        eb.setTitle("Les Personnages", null);
+
+        eb.setColor(ColorTheme.INFO.getColor());
+
+        for (Character character : charactersList) eb.addField(character.toString(), character.getDescription(), false);
+
+        channel.sendMessage(eb.build()).queue();
     }
 
     public void printPlayerRecap(Player[] players){
-        String playersRecap = "Situation actuel :\n";
+        String playersRecap = "**Situation actuel :**\n";
         for(Player player:players) playersRecap+= " - "+player.toString()+"\n";
         inOut.printGlobalMsg(playersRecap);
     }
@@ -69,15 +83,20 @@ public class MascaradeOut {
         inOut.printGlobalMsg(opponent.toString()+" ne s'oppose plus !");
     }
 
+    private CountDown countDown;
+
     public void printSetCharacter(GameRound gameRound) {
         inOut.printGlobalMsg(gameRound.player.toString()+" affirme être "+gameRound.charaChose.toString());
+        inOut.countDown(GlobalParameter.CHOICE_USE_TIME_IN_SEC,
+                "Il reste ", "s avant de pouvoir utiliser le pouvoir",
+                "Vous pouvez utiliser le pouvoir avec !"+ Command.USE.eventCommands[0]);
     }
 
 
     public void printAction(Player player, Card charaChose) {
         inOut.printGlobalMsg(
-                player.toString()+" utilise le pouvoir "+charaChose.getType().toString()+"\n" +
-                        "("+charaChose.getType().getDescription()+")"
+                player.toString()+" a utilisé le pouvoir "+charaChose.getType().toString()+"\n" +
+                        "("+charaChose.getDescription()+")"
         );
     }
 
@@ -96,13 +115,13 @@ public class MascaradeOut {
     }
 
     public void printPodium(TableRound tableRound) {
-        String result = "#################### **Poduim** ####################\n*";
+        String result = "#################### **Poduim** ####################\n**";
         int i=1;
         List<Player> players = Arrays.asList(tableRound.getPlayers());
-        players.sort(Comparator.comparing(p->p.getPurse().getValue()));
+        players.sort(Comparator.comparing(p->(-p.getPurse().getValue())));
         for (Player player : players) {
             result+=i+" - "+player.toString();
-            if (i==1) result+="*";
+            if (i==1) result+="**";
             result+="\n";
             i++;
         }

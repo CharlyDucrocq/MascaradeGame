@@ -17,4 +17,8 @@ public abstract class Card {
     public Character getType() {
         return type;
     }
+
+    public String getDescription(){
+        return type.getDescription();
+    };
 }

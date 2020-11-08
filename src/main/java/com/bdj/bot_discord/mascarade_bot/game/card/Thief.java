@@ -25,4 +25,9 @@ public class Thief extends Card {
     public static Card create(Player player, Game game){
         return new Thief(player, game.getTable());
     }
+
+    @Override
+    public String getDescription() {
+        return "Vole "+COIN_STOLE+" a "+rightPlayer.toString()+" et a "+leftPlayer.toString();
+    }
 }

@@ -23,4 +23,9 @@ public class Witch extends Card {
     public static Card create(Player player, Game game){
         return new Witch(player, game.getTable());
     }
+
+    @Override
+    public String getDescription() {
+        return "Echange sa bourse avec "+richest;
+    }
 }

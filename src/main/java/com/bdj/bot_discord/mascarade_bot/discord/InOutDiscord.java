@@ -2,7 +2,10 @@ package com.bdj.bot_discord.mascarade_bot.discord;
 
 import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
 import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
+
+import java.awt.*;
 
 public class InOutDiscord implements InOutGameInterface {
     private MessageChannel globalChannel;
@@ -17,9 +20,12 @@ public class InOutDiscord implements InOutGameInterface {
         user.sendMessage(message);
     }
 
+    private CountDown countDown;
+
     @Override
-    public void countDown(int from) {
-        //tODO
+    public void countDown(int from, String prefix, String suffix, String endMsg){
+        if (countDown != null) countDown.kill();
+        countDown = new CountDown(10,globalChannel,prefix,suffix,endMsg);
     }
 
     @Override
@@ -30,7 +36,13 @@ public class InOutDiscord implements InOutGameInterface {
 
     public void printError(Exception e, MessageChannel channel) {
         if(channel == null) channel = this.globalChannel;
-        channel.sendMessage("```diff\n- "+"ERROR : "+e.getMessage()+"```").queue();
+
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Erreur", null);
+        eb.setDescription(e.getMessage());
+        eb.setColor(Color.red);
+
+        channel.sendMessage(eb.build()).queue();
     }
 
     public void setGlobalChannel(MessageChannel channel) {
@@ -39,5 +51,9 @@ public class InOutDiscord implements InOutGameInterface {
 
     public boolean noChannel() {
         return globalChannel == null;
+    }
+
+    public MessageChannel getGlobalChannel() {
+        return globalChannel;
     }
 }

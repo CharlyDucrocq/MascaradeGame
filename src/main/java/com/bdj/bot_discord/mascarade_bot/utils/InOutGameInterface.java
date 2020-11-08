@@ -7,6 +7,6 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 public interface InOutGameInterface {
     void printGlobalMsg(String message);
     void printPersonalMsg(User user, String message);
-    void countDown(int from);
+    void countDown(int from, String prefix, String suffix, String endMsg);
     int askChoiceTo(User user, QuestionAnswers describ);
 }

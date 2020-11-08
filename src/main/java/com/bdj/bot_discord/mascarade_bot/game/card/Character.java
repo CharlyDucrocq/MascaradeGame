@@ -30,7 +30,7 @@ public enum Character implements CardCreator {
             Queen::create
     ),
     WITCH(
-            "Sorcière",
+            "Sorciere",
             //TODO a changer en même temps que la methode associé
             "Echange sa bourse avec un joueur (le plus riche - provisoire)",
             Witch::create
@@ -94,6 +94,6 @@ public enum Character implements CardCreator {
 
     public boolean equivalentTo(String txt){
         txt = txt.toLowerCase();
-        return txt.equals(frenchName) || txt.equals(name().toLowerCase());
+        return txt.equals(frenchName.toLowerCase()) || txt.equals(name().toLowerCase());
     }
 }
