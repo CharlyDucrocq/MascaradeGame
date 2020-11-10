@@ -7,6 +7,7 @@ import com.bdj.bot_discord.lobby.GameFactory;
 import com.bdj.bot_discord.lobby.Lobby;
 import com.bdj.bot_discord.mascarade_bot.errors.GameFullException;
 import com.bdj.bot_discord.mascarade_bot.game.GlobalParameter;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 public class DiscordLobby<G extends Game> extends Lobby<G> {
     final InOutDiscord inOut;
@@ -42,5 +43,9 @@ public class DiscordLobby<G extends Game> extends Lobby<G> {
 
     public InOutDiscord getInOut() {
         return inOut;
+    }
+
+    public MessageChannel getChannel() {
+        return inOut.getGlobalChannel();
     }
 }

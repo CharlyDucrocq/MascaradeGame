@@ -103,4 +103,15 @@ public class GameDistributor<G extends Game> {
         lobby.getInOut().setGlobalChannel(channel);
         channelGame.put(channel,lobby);
     }
+
+    public boolean isInGame(User user) {
+        Lobby<G> lobby = getLobby(user);
+        if (lobby == null) return false;
+        return !lobby.gameOver();
+    }
+
+    public boolean isInLobby(User user) {
+        Lobby<G> lobby = getLobby(user);
+        return lobby != null;
+    }
 }

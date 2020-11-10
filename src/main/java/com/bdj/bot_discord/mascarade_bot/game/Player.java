@@ -12,7 +12,7 @@ public class Player {
     private Purse purse = new Purse();
     private User user;
 
-    boolean haveWin = false;
+    private boolean haveWin = false;
 
 
     Player(User user){

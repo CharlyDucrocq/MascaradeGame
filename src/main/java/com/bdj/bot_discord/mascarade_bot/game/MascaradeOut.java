@@ -2,7 +2,7 @@ package com.bdj.bot_discord.mascarade_bot.game;
 
 import com.bdj.bot_discord.discord.ColorTheme;
 import com.bdj.bot_discord.discord.CountDown;
-import com.bdj.bot_discord.discord.commands.Command;
+import com.bdj.bot_discord.discord.commands.mascarade.game.UseAction;
 import com.bdj.bot_discord.mascarade_bot.game.card.Card;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -86,7 +86,7 @@ public class MascaradeOut {
         if (countDown != null) countDown.kill();
         countDown = new CountDown(GlobalParameter.CHOICE_USE_TIME_IN_SEC, channel,
                 "Il reste ", "s avant de pouvoir utiliser le pouvoir",
-                "Vous pouvez utiliser le pouvoir avec !"+ Command.USE.eventCommands[0]);
+                "Vous pouvez utiliser le pouvoir avec !"+ new UseAction().getName());
     }
 
 

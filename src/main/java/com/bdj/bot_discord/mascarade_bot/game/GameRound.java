@@ -18,17 +18,17 @@ import java.util.List;
 
 public class GameRound {
     private final MascaradeGame game;
-    MascaradeOut out;
+    private final MascaradeOut out;
 
-    Player player;
-    List<Player> contestPlayers = new LinkedList<>();
+    public final Player player;
+    public final List<Player> contestPlayers = new LinkedList<>();
     CardCreator charaChose;
     Instant characterChoiceInstant;
 
-    QuestionToPlayer questionInProgress = new QuestionToPlayer();
+    private final QuestionToPlayer questionInProgress = new QuestionToPlayer();
 
-    boolean contestAllowed = true;
-    boolean isEnded = false;
+    private boolean contestAllowed = true;
+    private boolean isEnded = false;
 
     GameRound(MascaradeGame game, Player player){
         this.game = game;
