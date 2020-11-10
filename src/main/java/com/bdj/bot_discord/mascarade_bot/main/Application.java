@@ -1,9 +1,8 @@
 package com.bdj.bot_discord.mascarade_bot.main;
 
-import com.bdj.bot_discord.mascarade_bot.discord.InOutDiscord;
-import com.bdj.bot_discord.mascarade_bot.discord.User;
-import com.bdj.bot_discord.mascarade_bot.discord.commands.Command;
-import com.bdj.bot_discord.mascarade_bot.discord.commands.CommandAction;
+import com.bdj.bot_discord.discord.InOutDiscord;
+import com.bdj.bot_discord.discord.commands.Command;
+import com.bdj.bot_discord.discord.commands.CommandAction;
 import com.bdj.bot_discord.mascarade_bot.errors.GameException;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

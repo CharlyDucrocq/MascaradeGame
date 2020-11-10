@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.utils;
 
-import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.discord.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;

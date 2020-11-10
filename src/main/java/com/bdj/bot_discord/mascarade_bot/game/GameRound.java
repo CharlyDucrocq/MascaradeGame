@@ -1,7 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
-import com.bdj.bot_discord.mascarade_bot.discord.CountDown;
-import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.discord.User;
 import com.bdj.bot_discord.mascarade_bot.errors.ActionNotAllowed;
 import com.bdj.bot_discord.mascarade_bot.errors.GameException;
 import com.bdj.bot_discord.mascarade_bot.errors.QuestionInProgress;
@@ -18,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GameRound {
-    private final Game game;
+    private final MascaradeGame game;
     MascaradeOut out;
 
     Player player;
@@ -31,7 +30,7 @@ public class GameRound {
     boolean contestAllowed = true;
     boolean isEnded = false;
 
-    GameRound(Game game, Player player){
+    GameRound(MascaradeGame game, Player player){
         this.game = game;
         this.player = player;
         this.out = game.getOut();
@@ -145,7 +144,7 @@ public class GameRound {
         return player.getUser();
     }
 
-    public Game getGame() {
+    public MascaradeGame getGame() {
         return game;
     }
 

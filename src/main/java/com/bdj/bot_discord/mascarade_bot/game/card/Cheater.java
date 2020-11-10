@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.game.card;
 
-import com.bdj.bot_discord.mascarade_bot.game.Game;
+import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
 import com.bdj.bot_discord.mascarade_bot.game.Player;
 
 public class Cheater extends Card {
@@ -14,7 +14,7 @@ public class Cheater extends Card {
         player.cheat();
     }
 
-    public static Card create(Player player, Game game){
+    public static Card create(Player player, MascaradeGame game){
         return new Cheater(player);
     }
 }

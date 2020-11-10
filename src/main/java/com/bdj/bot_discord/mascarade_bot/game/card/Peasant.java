@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.game.card;
 
-import com.bdj.bot_discord.mascarade_bot.game.Game;
+import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
 import com.bdj.bot_discord.mascarade_bot.game.GameRound;
 import com.bdj.bot_discord.mascarade_bot.game.Player;
 
@@ -22,7 +22,7 @@ public class Peasant extends Card {
             player.getPurse().addCoin(COIN_ADD_IF_ONE);
     }
 
-    public static Card create(Player player, Game game){
+    public static Card create(Player player, MascaradeGame game){
         return new Peasant(player, game.getRound());
     }
 

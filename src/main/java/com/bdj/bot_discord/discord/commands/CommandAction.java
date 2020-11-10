@@ -1,10 +1,12 @@
-package com.bdj.bot_discord.mascarade_bot.discord.commands;
+package com.bdj.bot_discord.discord.commands;
 
 
-import com.bdj.bot_discord.mascarade_bot.discord.ColorTheme;
-import com.bdj.bot_discord.mascarade_bot.discord.GameDistributor;
-import com.bdj.bot_discord.mascarade_bot.discord.InOutDiscord;
-import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.discord.ColorTheme;
+import com.bdj.bot_discord.discord.GameDistributor;
+import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.lobby.DiscordLobby;
+import com.bdj.bot_discord.lobby.Game;
+import com.bdj.bot_discord.lobby.Lobby;
 import com.bdj.bot_discord.mascarade_bot.errors.*;
 import com.bdj.bot_discord.mascarade_bot.game.*;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
@@ -20,11 +22,11 @@ public class CommandAction {
     public static Application app;
     public static UserList userList;
     public static Random random = new Random();
-    public static GameDistributor lobbies = new GameDistributor();
+    public static GameDistributor<MascaradeGame> lobbies = new GameDistributor<>();
 
     public static void create(MessageReceivedEvent event) {
         User user = getUser(event);
-        Lobby lobby = lobbies.newLobby(user,event.getMessage().getChannel());
+        DiscordLobby<MascaradeGame> lobby = lobbies.newLobby(user,event.getMessage().getChannel());
     }
 
     public static void join(MessageReceivedEvent event){
@@ -34,17 +36,17 @@ public class CommandAction {
 
     public static void start(MessageReceivedEvent event){
         User user = getUser(event);
-        Lobby lobby = lobbies.getLobby(user);
+        DiscordLobby<MascaradeGame> lobby = lobbies.getLobby(user);
         if(lobby == null) throw new NoGameCreated();
         if(!lobby.isAdmin(user)) throw new BadUser();
 
-        lobby.createGame();
+        lobby.createGame(new MascaradeFactory());
         lobby.getGame().start();
     }
 
     public static void switchAction(MessageReceivedEvent event){
         User userWhoAsk = getUser(event);
-        Game game = getGame(userWhoAsk);
+        MascaradeGame game = getGame(userWhoAsk);
         GameRound round = game.getRound();
 
         if(!userWhoAsk.equals(round.getUser())) throw new BadUser();
@@ -86,7 +88,7 @@ public class CommandAction {
 
     public static void contestAction(MessageReceivedEvent event){
         User user = getUser(event);
-        Game game = getGame(user);
+        MascaradeGame game = getGame(user);
         GameRound round = game.getRound();
 
         if(user.equals(round.getUser())) throw new BadUser();
@@ -99,13 +101,13 @@ public class CommandAction {
 
     public static void recapPlayer(MessageReceivedEvent event) {
         User user = getUser(event);
-        Game game = getGame(user);
+        MascaradeGame game = getGame(user);
         game.getOut().printPlayerRecap(game.getTable().getPlayers());
     }
 
     public static void recapCharacter(MessageReceivedEvent event) {
         User user = getUser(event);
-        Game game = getGame(user);
+        MascaradeGame game = getGame(user);
         game.getOut().printCharactersRecap(game.getCharactersList());
     }
 
@@ -119,8 +121,8 @@ public class CommandAction {
         event.getChannel().sendMessage(eb.build()).queue();
     }
 
-    private static Game getGame(User user){
-        return lobbies.getGame(user);
+    private static MascaradeGame getGame(User user){
+        return (MascaradeGame) lobbies.getGame(user);
     }
 
     private static User getUser(MessageReceivedEvent event) {

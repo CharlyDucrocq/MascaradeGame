@@ -1,11 +1,13 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
-import com.bdj.bot_discord.mascarade_bot.discord.InOutDiscord;
-import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.discord.InOutDiscord;
+import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.lobby.DiscordLobby;
+import com.bdj.bot_discord.lobby.Lobby;
 import com.bdj.bot_discord.mascarade_bot.game.card.Card;
 import com.bdj.bot_discord.mascarade_bot.game.card.CardCreator;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
-import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import org.junit.jupiter.api.*;
 
 import java.time.Instant;
@@ -19,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class GameTest {
     private int NB_PLAYERS = 7;
 
-    Game game;
+    MascaradeGame game;
     User[] users;
     Player[] players;
     InOutDiscord inOutMock;
@@ -28,16 +30,15 @@ public class GameTest {
     @BeforeEach
     void init(){
         inOutMock = mock(InOutDiscord.class);
-        Lobby lobby = new Lobby(inOutMock);
+        Lobby<MascaradeGame> lobby = new DiscordLobby<>(inOutMock);
         users = new User[NB_PLAYERS];
         for(int i=0;i<NB_PLAYERS;i++){
             users[i] = mock(User.class);
             if(i==0) lobby.setAdmin(users[i]);
             lobby.addPlayer(users[i]);
         }
-        lobby.createGame();
-        game = lobby.game;
-        game.setInOut(inOutMock);
+        game = lobby.createGame(new MascaradeFactory());
+        game.setOut(mock(MascaradeOut.class));
         game.start();
         players = game.getTable().getPlayers();
     }

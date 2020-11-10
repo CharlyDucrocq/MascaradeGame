@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.game.card;
 
-import com.bdj.bot_discord.mascarade_bot.game.Game;
+import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
 import com.bdj.bot_discord.mascarade_bot.game.Player;
 import com.bdj.bot_discord.mascarade_bot.game.TableRound;
 
@@ -22,7 +22,7 @@ public class Thief extends Card {
         player.getPurse().addCoin(rightPlayer.getPurse().removeCoin(COIN_STOLE));
     }
 
-    public static Card create(Player player, Game game){
+    public static Card create(Player player, MascaradeGame game){
         return new Thief(player, game.getTable());
     }
 

@@ -1,10 +1,8 @@
 package com.bdj.bot_discord.mascarade_bot.utils.choice.character;
 
-import com.bdj.bot_discord.mascarade_bot.discord.User;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import com.bdj.bot_discord.mascarade_bot.utils.choice.Answer;
 import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
-import com.bdj.bot_discord.mascarade_bot.utils.choice.user.UserVoid;
 
 public class CharacterChoice extends QuestionAnswers {
     public CharacterChoice(String question, Character[] chars, CharVoid whatToDo) {

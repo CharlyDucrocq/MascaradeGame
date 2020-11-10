@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
-import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.discord.User;
 
 public class TableRound {
     private Player[] players;

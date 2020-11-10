@@ -1,4 +1,4 @@
-package com.bdj.bot_discord.mascarade_bot.discord;
+package com.bdj.bot_discord.discord;
 
 import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
 import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
@@ -25,7 +25,7 @@ public class InOutDiscord implements InOutGameInterface {
     @Override
     public void countDown(int from, String prefix, String suffix, String endMsg){
         if (countDown != null) countDown.kill();
-        countDown = new CountDown(10,globalChannel,prefix,suffix,endMsg);
+        countDown = new CountDown(from,globalChannel,prefix,suffix,endMsg);
     }
 
     @Override
@@ -34,9 +34,11 @@ public class InOutDiscord implements InOutGameInterface {
         return 0;
     }
 
-    public void printError(Exception e, MessageChannel channel) {
-        if(channel == null) channel = this.globalChannel;
+    public void printError(Exception e) {
+        printError(e, globalChannel);
+    }
 
+    public static void printError(Exception e, MessageChannel channel){
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Erreur", null);
         eb.setDescription(e.getMessage());

@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.game.card;
 
-import com.bdj.bot_discord.mascarade_bot.game.Game;
+import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
 import com.bdj.bot_discord.mascarade_bot.game.Player;
 
 public class Queen extends Card {
@@ -15,7 +15,7 @@ public class Queen extends Card {
         player.getPurse().addCoin(COIN_ADD);
     }
 
-    public static Card create(Player player, Game game){
+    public static Card create(Player player, MascaradeGame game){
         return new Queen(player);
     }
 }

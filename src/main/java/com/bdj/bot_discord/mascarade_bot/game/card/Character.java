@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.game.card;
 
-import com.bdj.bot_discord.mascarade_bot.game.Game;
+import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
 import com.bdj.bot_discord.mascarade_bot.game.Player;
 
 public enum Character implements CardCreator {
@@ -83,7 +83,7 @@ public enum Character implements CardCreator {
         return description;
     }
 
-    public Card getCard(Player player, Game game){
+    public Card getCard(Player player, MascaradeGame game){
         return creator.getCard(player, game);
     }
 

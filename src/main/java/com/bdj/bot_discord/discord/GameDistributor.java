@@ -1,22 +1,24 @@
-package com.bdj.bot_discord.mascarade_bot.discord;
+package com.bdj.bot_discord.discord;
 
+import com.bdj.bot_discord.discord.lobby.DiscordLobby;
+import com.bdj.bot_discord.lobby.Game;
 import com.bdj.bot_discord.mascarade_bot.errors.GameException;
 import com.bdj.bot_discord.mascarade_bot.errors.GameNotFinished;
 import com.bdj.bot_discord.mascarade_bot.errors.NoGameStarted;
 import com.bdj.bot_discord.mascarade_bot.errors.NoLobbyFound;
-import com.bdj.bot_discord.mascarade_bot.game.Game;
-import com.bdj.bot_discord.mascarade_bot.game.Lobby;
+import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
+import com.bdj.bot_discord.lobby.Lobby;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class GameDistributor {
-    private Map<User, Lobby> userGame = new HashMap<>();
-    private Map<MessageChannel, Lobby> channelGame = new HashMap<>();
+public class GameDistributor<G extends Game> {
+    private Map<User, DiscordLobby<G>> userGame = new HashMap<>();
+    private Map<MessageChannel, DiscordLobby<G>> channelGame = new HashMap<>();
 
-    public Lobby newLobby(User admin, MessageChannel channel){
-        Lobby prev = userGame.get(admin);
+    public DiscordLobby<G> newLobby(User admin, MessageChannel channel){
+        DiscordLobby<G> prev = userGame.get(admin);
         if(prev != null){
             if(prev.gameOver()){
                 if(prev.isAdmin(admin))
@@ -29,7 +31,7 @@ public class GameDistributor {
         }
         if(channelOccupied(channel))
             throw new GameException("Ce channel est déjà occupé");
-        Lobby newOne = new Lobby();
+        DiscordLobby<G> newOne = new DiscordLobby<>();
         userGame.put(admin,newOne);
         newOne.setAdmin(admin);
         associate(channel,newOne);
@@ -41,8 +43,8 @@ public class GameDistributor {
         return channelGame.containsKey(channel);
     }
 
-    public void joinLobby(User user, Lobby lobby){
-        Lobby prev = userGame.get(user);
+    public void joinLobby(User user, DiscordLobby<G> lobby){
+        DiscordLobby<G> prev = userGame.get(user);
         if(prev != null && prev.isPlayer(user)){
             quit(user);
             if(prev.equals(lobby)) return;
@@ -57,12 +59,12 @@ public class GameDistributor {
     }
 
     public void joinLobbyOf(User newOne, User referent){
-        Lobby lobby = userGame.get(referent);
+        DiscordLobby<G> lobby = userGame.get(referent);
         joinLobby(newOne, lobby);
     }
 
     public void quit(User user){
-        Lobby lobby = getLobby(user);
+        DiscordLobby<G> lobby = getLobby(user);
         if(lobby == null) throw new NoLobbyFound();
         if(!lobby.gameOver()) throw new GameNotFinished();
 
@@ -70,7 +72,7 @@ public class GameDistributor {
         lobby.removePlayer(user);
     }
 
-    private void deleteLobby(Lobby toDelete) {
+    private void deleteLobby(DiscordLobby<G> toDelete) {
         for (User user : toDelete.getUsers()) userGame.remove(user);
         userGame.remove(toDelete.getAdmin());
         channelGame.remove(toDelete.getInOut().getGlobalChannel());
@@ -78,7 +80,7 @@ public class GameDistributor {
     }
 
     public Game getGame(User user){
-        Lobby lobby = userGame.get(user);
+        DiscordLobby<G> lobby = userGame.get(user);
         if(lobby == null) throw new NoLobbyFound();
         Game game = lobby.getGame();
         if(game == null) throw new NoGameStarted();
@@ -86,15 +88,15 @@ public class GameDistributor {
         return game;
     }
 
-    public Lobby getLobby(User user) {
+    public DiscordLobby<G> getLobby(User user) {
         return userGame.get(user);
     }
 
-    public Lobby getLobby(MessageChannel channel){
+    public DiscordLobby<G> getLobby(MessageChannel channel){
         return channelGame.get(channel);
     }
 
-    public void associate(MessageChannel channel, Lobby lobby){
+    public void associate(MessageChannel channel, DiscordLobby<G> lobby){
         if (!lobby.getInOut().noChannel()){
             channelGame.remove(channel);
         }

@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.mascarade_bot.utils.choice.user;
 
-import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.discord.User;
 import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
 import com.bdj.bot_discord.mascarade_bot.utils.choice.Answer;
 

@@ -1,4 +1,4 @@
-package com.bdj.bot_discord.mascarade_bot.discord;
+package com.bdj.bot_discord.discord;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;

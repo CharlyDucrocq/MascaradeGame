@@ -1,8 +1,7 @@
-package com.bdj.bot_discord.mascarade_bot.discord;
+package com.bdj.bot_discord.discord;
 
 import com.bdj.bot_discord.mascarade_bot.errors.GameException;
 import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
-import net.dv8tion.jda.api.entities.Member;
 
 import java.util.Objects;
 

@@ -1,16 +1,14 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
-import com.bdj.bot_discord.mascarade_bot.discord.InOutDiscord;
-import com.bdj.bot_discord.mascarade_bot.discord.User;
+import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.lobby.Game;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
-import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
-public class Game {
+public class MascaradeGame implements Game {
     public final int nbStartingTurn; // during only switch available
 
     private TableRound tableRound;
@@ -21,7 +19,7 @@ public class Game {
 
     private Bank bank = new Bank();
 
-    public Game(Player[] players){
+    public MascaradeGame(Player[] players){
         tableRound = new TableRound(players);
         nbStartingTurn = players.length;
     }
@@ -66,8 +64,8 @@ public class Game {
         return round;
     }
 
-    public void setInOut(InOutDiscord inOut) {
-        this.out = new MascaradeOut(inOut);
+    public void setOut(MascaradeOut out) {
+        this.out = out;
     }
 
     public Player getPlayer(User user) {
@@ -107,4 +105,6 @@ public class Game {
     public boolean isOver() {
         return ended;
     }
+
+
 }
