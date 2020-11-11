@@ -8,7 +8,7 @@ import com.bdj.bot_discord.mascarade_bot.game.card.Card;
 import com.bdj.bot_discord.mascarade_bot.game.card.CardCreator;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
 import com.bdj.bot_discord.mascarade_bot.utils.choice.YesOrNoQuestion;
-import com.bdj.bot_discord.mascarade_bot.utils.choice.user.UserQuestion;
+import com.bdj.bot_discord.mascarade_bot.utils.choice.ArraysChoice;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -22,7 +22,7 @@ public class GameRound {
 
     public final Player player;
     public final List<Player> contestPlayers = new LinkedList<>();
-    CardCreator charaChose;
+    Character charaChose;
     Instant characterChoiceInstant;
 
     private final QuestionToPlayer questionInProgress = new QuestionToPlayer();
@@ -30,14 +30,21 @@ public class GameRound {
     private boolean contestAllowed = true;
     private boolean isEnded = false;
 
+    protected RoundAction[] actionsAvailable = new RoundAction[]{RoundAction.PEEK, RoundAction.SWITCH, RoundAction.USE};
+
     GameRound(MascaradeGame game, Player player){
         this.game = game;
         this.player = player;
         this.out = game.getOut();
         out.printStartTurn(this);
+        out.askToChooseAction(this);
     }
 
-    public void contest(Player opponent){
+    public RoundAction[] getActionsAvailable() {
+        return actionsAvailable;
+    }
+
+    public synchronized void contest(Player opponent){
         if(!contestAllowed) throw new ActionNotAllowed("Vous n'êtes pas autorisé à faire ça maintenant");
         if (contestPlayers.remove(opponent))
             out.printUncontest(opponent);
@@ -48,7 +55,6 @@ public class GameRound {
     }
 
     public void setCharacterToUse(Character c){
-        if(!questionInProgress.noQuestionInProgress()) throw new QuestionInProgress();
         if(!game.getCharactersList().contains(c))
             throw new GameException("Le personnage n'est pas dans la partie");
         characterChoiceInstant = Instant.now();
@@ -57,30 +63,15 @@ public class GameRound {
     }
 
     public void peekCharacter(){
-        if(!questionInProgress.noQuestionInProgress()) throw new QuestionInProgress();
         out.printPeek(player);
         endTurn();
     }
 
     public void askForSwitch(){
-        if(!questionInProgress.noQuestionInProgress()) throw new QuestionInProgress();
-        GameRound round = this;
-        UserQuestion userChoice = new UserQuestion(
-                "Avec qui voulez-vous échanger (ou pas) ?",
-                game.getUsers() ,
-                otherUser ->{
-                    Player otherPlayer = game.getPlayer(otherUser);
-                    YesOrNoQuestion yesOrNo = new YesOrNoQuestion(
-                            "Voulez-vous réellement échanger les cartes ?",
-                            () -> round.switchCard(otherPlayer, true),
-                            () -> round.switchCard(otherPlayer, false));
-                    questionInProgress.set(yesOrNo,player, QuestionToPlayer.Type.SWITCH_YES_NO).send();
-                });
-        questionInProgress.set(userChoice,player, QuestionToPlayer.Type.SWITCH_PLAYER).send();
+        out.askForSwitch(this);
     }
 
     public void switchCard(Player otherPlayer, boolean really){
-        if(questionInProgress.getType() == QuestionToPlayer.Type.SWITCH_YES_NO) questionInProgress.clear();
         if(really){
             Character c = player.getCurrentCharacter();
             player.setCurrentCharacter(otherPlayer.getCurrentCharacter());
@@ -90,11 +81,15 @@ public class GameRound {
         endTurn();
     }
 
-    public void useCharacter(){
-        useCharacterOnlyForTest(charaChose); // separated for test
+    public void askForUse() {
+        out.askForUse(this);
     }
 
-    void useCharacterOnlyForTest(CardCreator creator){
+    public void useCharacter(){
+        new Thread(()->useCharacterOnlyForTest(charaChose)).start(); // separated for test
+    }
+
+    synchronized void useCharacterOnlyForTest(CardCreator creator){
         if(!questionInProgress.noQuestionInProgress()) throw new QuestionInProgress();
         if (charaChose==null)
             throw new GameException("Le personnage doit être definie avant !");
@@ -111,6 +106,7 @@ public class GameRound {
             return;
         }
 
+        contestPlayers.remove(player);
         contestPlayers.add(0, player);
 
         // sort to place the one who have the character in the first place

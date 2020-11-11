@@ -1,11 +1,15 @@
 package com.bdj.bot_discord.mascarade_bot.game;
 
-import com.bdj.bot_discord.discord.ColorTheme;
-import com.bdj.bot_discord.discord.CountDown;
+import com.bdj.bot_discord.discord.*;
 import com.bdj.bot_discord.discord.commands.mascarade.game.UseAction;
 import com.bdj.bot_discord.mascarade_bot.game.card.Card;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
+import com.bdj.bot_discord.mascarade_bot.main.Application;
+import com.bdj.bot_discord.mascarade_bot.utils.choice.ArraysChoice;
+import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
+import com.bdj.bot_discord.mascarade_bot.utils.choice.YesOrNoQuestion;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.util.Arrays;
@@ -24,11 +28,13 @@ public class MascaradeOut {
                 "############### **Début de la partie** ###############\n"
         ).queue();
         printCharactersRecap(game.getCharactersList());
-        String partyDescription = "Configuration de départ des Joueurs :\n";
+
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setTitle("Configuration de départ des Joueurs :\n");
         for (Player player : game.getTable().getPlayers()){
-            partyDescription+= "\t**" +player.toString() + " :** "+player.getCurrentCharacter().toString()+"\n";
+            bd.addField(player.toString(),player.getCurrentCharacter().toString(),false);
         }
-        channel.sendMessage(partyDescription).queue();
+        channel.sendMessage(bd.build()).queue();
     }
 
     public void printCharactersRecap(List<Character> charactersList) {
@@ -45,21 +51,67 @@ public class MascaradeOut {
     }
 
     public void printPlayerRecap(Player[] players){
-        String playersRecap = "**Situation actuel :**\n";
-        for(Player player:players) playersRecap+= " - "+player.toString()+"\n";
-        channel.sendMessage(playersRecap).queue();
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setTitle("**Situation actuel :**");
+        for (Player player : players){
+            bd.addField(" - "+player.toString(),"",false);
+        }
+        channel.sendMessage(bd.build()).queue();
     }
 
     public void printPeek(Player player){
-        channel.sendMessage(player.toString()+" regarde son role.").queue();
-        player.getUser().sendMessage(
-                "Vous êtes " +player.getCurrentCharacter().toString()+"\n" +
-                        "("+player.getCurrentCharacter().getDescription()+")"
-        );
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
+        bd.setTitle("Action de tour");
+        bd.setThumbnail(RoundAction.PEEK.getIconUrl());
+        bd.setDescription(player.toString()+" regarde son role.");
+        channel.sendMessage(bd.build()).queue();
+
+        bd = new EmbedBuilder();
+        bd.setTitle("Vous êtes " +player.getCurrentCharacter().toString());
+        bd.setDescription(player.getCurrentCharacter().getDescription());
+        bd.setThumbnail(player.getCurrentCharacter().getIconUrl());
+        player.getUser().getDiscordUser().openPrivateChannel().complete().sendMessage(bd.build()).queue();
     }
 
     public void printStartTurn(GameRound gameRound) {
-        channel.sendMessage("C'est au tour de "+gameRound.player.toString()).queue();
+        Player player = gameRound.player;
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setTitle("Nouveau tour");
+        bd.setThumbnail(player.getUser().getDiscordUser().getAvatarUrl());
+        bd.setDescription("C'est au tour de "+gameRound.player.toString());
+        channel.sendMessage(bd.build()).queue();
+    }
+
+    public void askToChooseAction(GameRound round) {
+        QuestionAnswers questionAnswers = new ArraysChoice<>(
+                "Quelle action souhaitez-vous réaliser ?",
+                round.getActionsAvailable(),
+                action -> action.doAction(round));
+
+    }
+
+    public void askForSwitch(GameRound round) {
+        MascaradeGame game = round.getGame();
+        net.dv8tion.jda.api.entities.User user = round.player.getUser().getDiscordUser();
+        ArraysChoice<User> userChoice = new ArraysChoice<>(
+                "Avec qui voulez-vous échanger (ou pas) ?",
+                game.getUsers() ,
+                otherUser ->{
+                    Player otherPlayer = game.getPlayer(otherUser);
+                    YesOrNoQuestion yesOrNo = new YesOrNoQuestion(
+                            "Voulez-vous réellement échanger les cartes ?",
+                            () -> round.switchCard(otherPlayer, true),
+                            () -> round.switchCard(otherPlayer, false));
+                    QuestionSender sender = new QuestionSender(yesOrNo);
+                    sender.disableEndMsg();
+                    sender.setTarget(user);
+                    sender.send(user.openPrivateChannel().complete());
+                });
+        QuestionSender sender = new QuestionSender(userChoice);
+        sender.disableEndMsg();
+        sender.setTarget(user);
+        sender.send(channel);
     }
 
     public void printSwitch(Player player, Player other, boolean trueOrNot){
@@ -67,7 +119,14 @@ public class MascaradeOut {
             player.getUser().sendMessage("Vous avez vraiment fait l'échange avec "+other.toString());
         else
             player.getUser().sendMessage("Vous n'avez pas fait l'échange avec "+other.toString());
-        channel.sendMessage(player.toString()+" échange (ou pas) ses cartes avec "+other.toString()).queue();
+
+
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
+        bd.setTitle("Action de tour");
+        bd.setThumbnail(RoundAction.SWITCH.getIconUrl());
+        bd.setDescription(player.toString()+" échange (ou pas) ses cartes avec "+other.toString());
+        channel.sendMessage(bd.build()).queue();
     }
 
     public void printContest(Player opponent) {
@@ -78,30 +137,63 @@ public class MascaradeOut {
         channel.sendMessage(opponent.toString()+" ne s'oppose plus !").queue();
     }
 
+    public void askForUse(GameRound round) {
+        MascaradeGame game = round.getGame();
+        net.dv8tion.jda.api.entities.User user = round.player.getUser().getDiscordUser();
+        ArraysChoice<Character> charChoice = new ArraysChoice<Character>(
+                "Quelle personnage affirmez-vous être ?",
+                game.getCharactersList() ,
+                round::setCharacterToUse);
+        QuestionSender sender = new QuestionSender(charChoice);
+        sender.disableEndMsg();
+        sender.setTarget(user);
+        sender.send(channel);
+    }
+
     private CountDown countDown;
 
     public void printSetCharacter(GameRound gameRound) {
-        channel.sendMessage(gameRound.player.toString()+" affirme être "+gameRound.charaChose.toString()).queue();
+        Player player = gameRound.player;
+
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
+        bd.setTitle("Action de tour");
+        bd.setThumbnail(gameRound.charaChose.getIconUrl());
+        bd.setDescription(gameRound.player.toString()+" affirme être "+gameRound.charaChose.toString());
+        Message msg = channel.sendMessage(bd.build()).complete();
+
+        ReactionAnalyser analyser = new ReactionAnalyser(msg);
+        analyser.addReaction(MyEmote.OBJECTION,
+                e->{gameRound.contest(gameRound.getGame().getPlayer(Application.userList.getUser(new User(e.getUser()))));},
+                e->{gameRound.contest(gameRound.getGame().getPlayer(Application.userList.getUser(new User(e.getUser()))));});
 
         if (countDown != null) countDown.kill();
         countDown = new CountDown(GlobalParameter.CHOICE_USE_TIME_IN_SEC, channel,
                 "Il reste ", "s avant de pouvoir utiliser le pouvoir",
-                "Vous pouvez utiliser le pouvoir avec !"+ new UseAction().getName());
+                "Vous pouvez utiliser le pouvoir avec !"+ new UseAction().getName(),
+                ()-> {
+                    analyser.killAll();
+                    gameRound.askForUse();
+                });
     }
 
 
     public void printAction(Player player, Card charaChose) {
-        channel.sendMessage(
-                player.toString()+" a utilisé le pouvoir "+charaChose.getType().toString()+"\n" +
-                        "("+charaChose.getDescription()+")"
-        ).queue();
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
+        bd.setTitle(player.toString()+" a utilisé le pouvoir "+charaChose.getType().toString());
+        bd.setThumbnail(charaChose.getType().getIconUrl());
+        bd.setDescription(charaChose.getDescription());
+        channel.sendMessage(bd.build()).queue();
     }
 
     public void printPenality(Player player) {
-        channel.sendMessage(
-                player.toString()+" : perdu, vous étiez "+player.getCurrentCharacter().toString()+"... \n" +
-                        "Vous avez payé "+GlobalParameter.PENALTY+" piece(s) d'or à la banque."
-        ).queue();
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
+        bd.setTitle(player.toString()+" : perdu, vous étiez "+player.getCurrentCharacter().toString()+"... ");
+        bd.setThumbnail(RoundAction.penalityIconUrl);
+        bd.setDescription("Vous avez payé "+GlobalParameter.PENALTY+" piece(s) d'or à la banque.");
+        channel.sendMessage(bd.build()).queue();
     }
 
     public void printEnd(MascaradeGame game) {
@@ -112,16 +204,14 @@ public class MascaradeOut {
     }
 
     public void printPodium(TableRound tableRound) {
-        String result = "#################### **Poduim** ####################\n**";
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setTitle("#################### **Poduim** ####################**");
         int i=1;
         List<Player> players = Arrays.asList(tableRound.getPlayers());
         players.sort(Comparator.comparing(p->(-p.getPurse().getValue())));
         for (Player player : players) {
-            result+=i+" - "+player.toString();
-            if (i==1) result+="**";
-            result+="\n";
-            i++;
+            bd.addField(String.valueOf(i++),player.toString(),false);
         }
-        channel.sendMessage(result).queue();
+        channel.sendMessage(bd.build()).queue();
     }
 }

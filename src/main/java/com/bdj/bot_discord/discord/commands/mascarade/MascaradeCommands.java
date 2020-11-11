@@ -1,10 +1,13 @@
 package com.bdj.bot_discord.discord.commands.mascarade;
 
-import com.bdj.bot_discord.discord.commands.mascarade.game.PeekAction;
-import com.bdj.bot_discord.discord.commands.mascarade.game.SwitchAction;
+import com.bdj.bot_discord.discord.commands.TestCommand;
+import com.bdj.bot_discord.discord.commands.mascarade.game.*;
+import com.bdj.bot_discord.discord.commands.mascarade.info.CharacterRecap;
+import com.bdj.bot_discord.discord.commands.mascarade.info.PlayerRecap;
 import com.bdj.bot_discord.discord.commands.mascarade.lobby.LobbyCreation;
 import com.bdj.bot_discord.discord.commands.mascarade.info.LobbyInfo;
 import com.bdj.bot_discord.discord.commands.mascarade.lobby.LobbyJoin;
+import com.bdj.bot_discord.discord.commands.mascarade.lobby.StartGame;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -26,8 +29,15 @@ public class MascaradeCommands extends CommandClientBuilder {
                 new LobbyCreation(),
                 new LobbyJoin(),
                 new LobbyInfo(),
-                new PeekAction(),
-                new SwitchAction()
+                new StartGame(),
+//                new PeekAction(),
+//                new SwitchAction(),
+//                new ChoiceAction(),
+//                new UseAction(),
+//                new Contest(),
+                new PlayerRecap(),
+                new CharacterRecap(),
+                new TestCommand()
         };
 
         for (Command command : commands) this.addCommand(command);

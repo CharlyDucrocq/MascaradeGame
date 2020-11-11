@@ -15,7 +15,7 @@ public class Player {
     private boolean haveWin = false;
 
 
-    Player(User user){
+    public Player(User user){
         this.user = user;
     }
 
@@ -79,9 +79,5 @@ public class Player {
 
     public void ask(QuestionAnswers question) {
         user.ask(question);
-    }
-
-    public void clearQuestion(){
-        user.clearQuestion();
     }
 }

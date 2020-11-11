@@ -7,8 +7,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class QuestionAnswers {
-    String question = "?";
-    List<Answer> list;
+    private String question = "?";
+    private List<Answer> list;
 
     boolean answered = false;
 
@@ -47,6 +47,14 @@ public class QuestionAnswers {
             if(!fund) throw new InvalidCommand();
         }
         answered = true;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public List<Answer> getAnswers() {
+        return list;
     }
 
     private boolean isInt(String s){

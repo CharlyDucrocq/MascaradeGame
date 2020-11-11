@@ -6,6 +6,7 @@ import com.bdj.bot_discord.discord.commands.mascarade.MascaradeCommands;
 import com.bdj.bot_discord.mascarade_bot.errors.InvalidCommand;
 import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
 import com.jagrosh.jdautilities.command.CommandEvent;
+import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -16,6 +17,7 @@ import com.bdj.bot_discord.mascarade_bot.utils.UserList;
 //import com.bdj.bot_discord.mascarade_bot.errors.GameException;
 //import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 //import javax.annotation.Nonnull;
+import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 
 import java.util.Random;
@@ -71,14 +73,21 @@ public class Application extends ListenerAdapter {
 //                    e.printStackTrace(System.out);
 //                }
 //            }
-//        }
+////        }
+//    @Override
+//    public synchronized void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+//        if(event.getAuthor().isBot()) return;
+//        event.getMessage().
 //    }
+
+    public static EventWaiter waiter = new EventWaiter();
 
     public static void main(String[] argv) throws LoginException {
         JDABuilder builder = JDABuilder.createDefault(TOKEN);
         //builder.addEventListeners(new Application());
 
         builder.addEventListeners(new MascaradeCommands(MY_ID).build());
+        builder.addEventListeners(waiter);
         builder.build();
     }
 }

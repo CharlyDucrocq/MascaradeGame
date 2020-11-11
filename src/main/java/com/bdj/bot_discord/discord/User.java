@@ -7,7 +7,6 @@ import java.util.Objects;
 
 public class User {
     private net.dv8tion.jda.api.entities.User user;
-    private QuestionAnswers questionInProgress;
 
     public User(net.dv8tion.jda.api.entities.User user){
         this.user = user;
@@ -45,18 +44,13 @@ public class User {
         return user.getAsMention();
     }
 
+    public net.dv8tion.jda.api.entities.User getDiscordUser() {
+        return user;
+    }
+
     public void ask(QuestionAnswers question) {
-        questionInProgress = question;
-        new InOutDiscord().askChoiceTo(this,question);
-    }
-
-    public void answer(String answer){
-        if(questionInProgress==null) throw new GameException("Aucune question en cours");
-        questionInProgress.answer(answer);
-        questionInProgress = null;
-    }
-
-    public void clearQuestion() {
-        questionInProgress = null;
+        QuestionSender sender = new QuestionSender(question);
+        sender.setTarget(user);
+        sender.send(user.openPrivateChannel().complete());
     }
 }

@@ -31,8 +31,7 @@ public enum Character implements CardCreator {
     ),
     WITCH(
             "Sorciere",
-            //TODO a changer en même temps que la methode associé
-            "Echange sa bourse avec un joueur (le plus riche - provisoire)",
+            "Echange sa bourse avec un joueur de votre choix",
             Witch::create
     ),
     BEGGAR(
@@ -95,5 +94,9 @@ public enum Character implements CardCreator {
     public boolean equivalentTo(String txt){
         txt = txt.toLowerCase();
         return txt.equals(frenchName.toLowerCase()) || txt.equals(name().toLowerCase());
+    }
+
+    public String getIconUrl(){
+        return "https://github.com/CharlyDucrocq/MascaradeGame/blob/main/rsrc/img/character_icon/"+name().toLowerCase()+"_icon.png?raw=true";
     }
 }
