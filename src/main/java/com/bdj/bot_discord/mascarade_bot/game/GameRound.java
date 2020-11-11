@@ -110,7 +110,10 @@ public class GameRound {
         contestPlayers.add(0, player);
 
         // sort to place the one who have the character in the first place
-        contestPlayers.sort(Comparator.comparing(
+        if(charaChose == Character.SPY || charaChose == Character.JOKER)
+            contestPlayers.sort(Comparator.comparing(
+                p -> player.getCurrentCharacter() == charaChose ? 1:0));
+        else  contestPlayers.sort(Comparator.comparing(
                 p -> player.getCurrentCharacter() == charaChose ? 0:1));
 
         for (Player p : contestPlayers) {

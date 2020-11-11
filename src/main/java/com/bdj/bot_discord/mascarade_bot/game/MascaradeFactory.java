@@ -20,9 +20,10 @@ public class MascaradeFactory implements GameFactory<MascaradeGame> {
     private MascaradeOut out;
 
     public void setPlayers(Collection<User> users){
+        LinkedList<User> copy = new LinkedList<>(users);
         Player[] tab = new Player[users.size()];
         int i = 0;
-        for (User user : users) tab[i++] = new Player(user);
+        while (!copy.isEmpty()) tab[i++] = new Player(copy.remove(random.nextInt(copy.size())));
         this.players = tab;
     }
 
@@ -53,7 +54,7 @@ public class MascaradeFactory implements GameFactory<MascaradeGame> {
                 characters.add(KING);
                 characters.add(QUEEN);
                 characters.add(WITCH);
-                characters.add(BEGGAR);
+                characters.add(SPY);
                 characters.add(THIEF);
                 break;
             }
@@ -64,6 +65,71 @@ public class MascaradeFactory implements GameFactory<MascaradeGame> {
                 characters.add(WITCH);
                 characters.add(PEASANT);
                 characters.add(PEASANT);
+                characters.add(JOKER);
+                break;
+            }
+            case 9 : {
+                characters.add(BISHOP);
+                characters.add(KING);
+                characters.add(QUEEN);
+                characters.add(WITCH);
+                characters.add(PEASANT);
+                characters.add(PEASANT);
+                characters.add(JOKER);
+                characters.add(CHEATER);
+                break;
+            }
+            case 10 : {
+                characters.add(BISHOP);
+                characters.add(KING);
+                characters.add(QUEEN);
+                characters.add(WITCH);
+                characters.add(PEASANT);
+                characters.add(PEASANT);
+                characters.add(JOKER);
+                characters.add(CHEATER);
+                characters.add(SPY);
+                break;
+            }
+            case 11 : {
+                characters.add(BISHOP);
+                characters.add(KING);
+                characters.add(QUEEN);
+                characters.add(WITCH);
+                characters.add(PEASANT);
+                characters.add(PEASANT);
+                characters.add(JOKER);
+                characters.add(CHEATER);
+                characters.add(SPY);
+                characters.add(INQUISITOR);
+                break;
+            }
+            case 12 : {
+                characters.add(BISHOP);
+                characters.add(KING);
+                characters.add(QUEEN);
+                characters.add(WITCH);
+                characters.add(PEASANT);
+                characters.add(PEASANT);
+                characters.add(JOKER);
+                characters.add(CHEATER);
+                characters.add(SPY);
+                characters.add(INQUISITOR);
+                characters.add(WIDOW);
+                break;
+            }
+            case 13 : {
+                characters.add(BISHOP);
+                characters.add(KING);
+                characters.add(QUEEN);
+                characters.add(WITCH);
+                characters.add(PEASANT);
+                characters.add(PEASANT);
+                characters.add(JOKER);
+                characters.add(CHEATER);
+                characters.add(SPY);
+                characters.add(INQUISITOR);
+                characters.add(WIDOW);
                 characters.add(THIEF);
                 break;
             }

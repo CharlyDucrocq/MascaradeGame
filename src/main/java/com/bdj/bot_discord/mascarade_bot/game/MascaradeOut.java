@@ -4,6 +4,7 @@ import com.bdj.bot_discord.discord.*;
 import com.bdj.bot_discord.discord.commands.mascarade.game.UseAction;
 import com.bdj.bot_discord.mascarade_bot.game.card.Card;
 import com.bdj.bot_discord.mascarade_bot.game.card.Character;
+import com.bdj.bot_discord.mascarade_bot.game.card.Inquisitor;
 import com.bdj.bot_discord.mascarade_bot.main.Application;
 import com.bdj.bot_discord.mascarade_bot.utils.choice.ArraysChoice;
 import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
@@ -213,5 +214,43 @@ public class MascaradeOut {
             bd.addField(String.valueOf(i++),player.toString(),false);
         }
         channel.sendMessage(bd.build()).queue();
+    }
+
+    public void printSpy(Player player, Player target) {
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setTitle("Vous êtes " +player.getCurrentCharacter().toString());
+        bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
+        bd.setDescription(player.getCurrentCharacter().getDescription());
+        bd.setThumbnail(player.getCurrentCharacter().getIconUrl());
+        player.getUser().getDiscordUser().openPrivateChannel().complete().sendMessage(bd.build()).queue();
+
+        bd = new EmbedBuilder();
+        bd.setTitle(target.toString()+" est " +target.getCurrentCharacter().toString());
+        bd.setAuthor(target.toString(),null,target.getUser().getDiscordUser().getAvatarUrl());
+        bd.setDescription(target.getCurrentCharacter().getDescription());
+        bd.setThumbnail(target.getCurrentCharacter().getIconUrl());
+        player.getUser().getDiscordUser().openPrivateChannel().complete().sendMessage(bd.build()).queue();
+    }
+
+    public void inquisitorProceed(Player player, Inquisitor inquisitor) {
+        QuestionSender sender1 = new QuestionSender(new ArraysChoice<>(
+                player.toString()+" : En tant qu'inquisiteur, à qui demandez-vous de deviner sa carte ?",
+                inquisitor.players,
+                target -> {
+                    QuestionSender sender2 = new QuestionSender(new ArraysChoice<>(
+                            target.toString()+" : Quelle est d'après vous votre carte ?",
+                            inquisitor.characters,
+                            character -> {
+                                inquisitor.processInfo(target, character);
+                            }
+                    ));
+                    sender2.setTarget(target.getUser().getDiscordUser());
+                    sender2.disableEndMsg();
+                    sender2.send(this.channel);
+                }
+        ));
+        sender1.setTarget(player.getUser().getDiscordUser());
+        sender1.disableEndMsg();
+        sender1.send(this.channel);
     }
 }

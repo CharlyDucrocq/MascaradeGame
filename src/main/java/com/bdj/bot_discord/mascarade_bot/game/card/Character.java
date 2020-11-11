@@ -49,11 +49,26 @@ public enum Character implements CardCreator {
             "Si le joueur a 10 pieces ou plus, il gagne la partie et y met fin",
             Cheater::create
     ),
-    /*
-    SPY,
-    JOKER,
-    WIDOW,
-    INQUISITOR*/
+    SPY(
+            "Espionne",
+            "Regarde sa carte et celle d'un joueur de son choix et les échange (ou pas)",
+            Spy::create
+    ),
+    JOKER(
+            "Fou",
+            "Echange (ou pas) deux cartes du jeu",
+            Joker::create
+    ),
+    WIDOW(
+            "Veuve",
+            "Gagne autant de piece que necessaire pour arriver à 10",
+            Widow::create
+    ),
+    INQUISITOR(
+            "Inquisiteur",
+            "Demande à un joueur de deviner sa carte. Après avoir été révélé, si il avait juste, rien ne se passe, sinon il donne 4 piece à l'inquisiteur.",
+            Inquisitor::new
+    ),
     NEVER_ON_GAME() //only for test
     ;
 
