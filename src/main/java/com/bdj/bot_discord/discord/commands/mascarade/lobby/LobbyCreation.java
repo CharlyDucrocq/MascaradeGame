@@ -3,11 +3,11 @@ package com.bdj.bot_discord.discord.commands.mascarade.lobby;
 import com.bdj.bot_discord.discord.User;
 import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
-import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
+import com.bdj.bot_discord.games.mascarade.MascaradeGame;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import static com.bdj.bot_discord.mascarade_bot.main.Application.mascaradeLobbies;
-import static com.bdj.bot_discord.mascarade_bot.main.Application.*;
+import static com.bdj.bot_discord.main.Application.mascaradeLobbies;
+import static com.bdj.bot_discord.main.Application.*;
 
 public class LobbyCreation extends ErrorCatcherCommand {
 

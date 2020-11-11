@@ -1,4 +1,4 @@
 target
 .idea
 mascarade_bot.iml
-src/main/java/com/bdj/bot_discord/mascarade_bot/main/TokenGhost.java
+src/main/java/com/bdj/bot_discord/main/TokenGhost.java

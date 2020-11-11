@@ -1,7 +1,7 @@
 package com.bdj.bot_discord.discord;
 
-import com.bdj.bot_discord.mascarade_bot.utils.choice.Answer;
-import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
+import com.bdj.bot_discord.utils.choice.Answer;
+import com.bdj.bot_discord.utils.choice.QuestionAnswers;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
-import static com.bdj.bot_discord.mascarade_bot.main.Application.waiter;
+import static com.bdj.bot_discord.main.Application.waiter;
 
 public class QuestionSender {
     private QuestionAnswers question;

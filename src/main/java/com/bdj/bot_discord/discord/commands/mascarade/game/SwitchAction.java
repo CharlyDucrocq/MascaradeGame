@@ -3,20 +3,17 @@ package com.bdj.bot_discord.discord.commands.mascarade.game;
 import com.bdj.bot_discord.discord.User;
 import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
 import com.bdj.bot_discord.discord.commands.MyCommandCategory;
-import com.bdj.bot_discord.discord.lobby.DiscordLobby;
-import com.bdj.bot_discord.mascarade_bot.errors.BadUser;
-import com.bdj.bot_discord.mascarade_bot.errors.InvalidCommand;
-import com.bdj.bot_discord.mascarade_bot.errors.NoGameCreated;
-import com.bdj.bot_discord.mascarade_bot.game.GameRound;
-import com.bdj.bot_discord.mascarade_bot.game.MascaradeFactory;
-import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
-import com.bdj.bot_discord.mascarade_bot.game.Player;
+import com.bdj.bot_discord.errors.BadUser;
+import com.bdj.bot_discord.errors.InvalidCommand;
+import com.bdj.bot_discord.games.mascarade.GameRound;
+import com.bdj.bot_discord.games.mascarade.MascaradeGame;
+import com.bdj.bot_discord.games.mascarade.Player;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import java.util.List;
 
-import static com.bdj.bot_discord.mascarade_bot.main.Application.*;
-import static com.bdj.bot_discord.mascarade_bot.main.Application.random;
+import static com.bdj.bot_discord.main.Application.*;
+import static com.bdj.bot_discord.main.Application.random;
 
 public class SwitchAction extends ErrorCatcherCommand {
     public SwitchAction(){

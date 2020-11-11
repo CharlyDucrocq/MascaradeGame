@@ -1,7 +1,7 @@
 package com.bdj.bot_discord.discord;
 
-import com.bdj.bot_discord.mascarade_bot.utils.choice.QuestionAnswers;
-import com.bdj.bot_discord.mascarade_bot.utils.InOutGameInterface;
+import com.bdj.bot_discord.utils.choice.QuestionAnswers;
+import com.bdj.bot_discord.utils.InOutGameInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 

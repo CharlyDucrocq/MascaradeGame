@@ -1,20 +1,10 @@
 package com.bdj.bot_discord.discord.commands;
 
-import com.bdj.bot_discord.discord.QuestionSender;
 import com.bdj.bot_discord.discord.User;
-import com.bdj.bot_discord.mascarade_bot.game.MascaradeOut;
-import com.bdj.bot_discord.mascarade_bot.game.Player;
-import com.bdj.bot_discord.mascarade_bot.game.card.Character;
-import com.bdj.bot_discord.mascarade_bot.utils.choice.Answer;
-import com.bdj.bot_discord.mascarade_bot.utils.choice.ArraysChoice;
+import com.bdj.bot_discord.games.mascarade.MascaradeOut;
+import com.bdj.bot_discord.games.mascarade.Player;
+import com.bdj.bot_discord.games.mascarade.card.Character;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Consumer;
-
-import static com.bdj.bot_discord.mascarade_bot.main.Application.*;
 
 public class TestCommand extends ErrorCatcherCommand {
     private MyLock lock = new MyLock();

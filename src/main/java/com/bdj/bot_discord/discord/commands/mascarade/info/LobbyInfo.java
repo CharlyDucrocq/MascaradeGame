@@ -4,14 +4,11 @@ import com.bdj.bot_discord.discord.ColorTheme;
 import com.bdj.bot_discord.discord.User;
 import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
-import com.bdj.bot_discord.lobby.Lobby;
-import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
+import com.bdj.bot_discord.games.mascarade.MascaradeGame;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import java.awt.*;
-
-import static com.bdj.bot_discord.mascarade_bot.main.Application.*;
+import static com.bdj.bot_discord.main.Application.*;
 
 public class LobbyInfo extends ErrorCatcherCommand {
     public LobbyInfo(){

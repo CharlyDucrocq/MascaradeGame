@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.discord;
 
-import com.bdj.bot_discord.mascarade_bot.main.Application;
+import com.bdj.bot_discord.main.Application;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;

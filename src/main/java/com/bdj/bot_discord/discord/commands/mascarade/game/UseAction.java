@@ -3,12 +3,12 @@ package com.bdj.bot_discord.discord.commands.mascarade.game;
 import com.bdj.bot_discord.discord.User;
 import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
 import com.bdj.bot_discord.discord.commands.MyCommandCategory;
-import com.bdj.bot_discord.mascarade_bot.errors.BadUser;
-import com.bdj.bot_discord.mascarade_bot.game.GameRound;
+import com.bdj.bot_discord.errors.BadUser;
+import com.bdj.bot_discord.games.mascarade.GameRound;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import static com.bdj.bot_discord.mascarade_bot.main.Application.getGame;
-import static com.bdj.bot_discord.mascarade_bot.main.Application.getUser;
+import static com.bdj.bot_discord.main.Application.getGame;
+import static com.bdj.bot_discord.main.Application.getUser;
 
 public class UseAction extends ErrorCatcherCommand {
     public UseAction(){

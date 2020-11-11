@@ -1,12 +1,9 @@
 package com.bdj.bot_discord.lobby;
 
-import com.bdj.bot_discord.discord.InOutDiscord;
 import com.bdj.bot_discord.discord.User;
-import com.bdj.bot_discord.mascarade_bot.game.MascaradeFactory;
-import com.bdj.bot_discord.mascarade_bot.errors.GameFullException;
-import com.bdj.bot_discord.mascarade_bot.errors.NotEnoughPlayers;
-import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
-import com.bdj.bot_discord.mascarade_bot.game.GlobalParameter;
+import com.bdj.bot_discord.errors.GameFullException;
+import com.bdj.bot_discord.errors.NotEnoughPlayers;
+import com.bdj.bot_discord.games.mascarade.GlobalParameter;
 
 import java.util.LinkedList;
 import java.util.List;

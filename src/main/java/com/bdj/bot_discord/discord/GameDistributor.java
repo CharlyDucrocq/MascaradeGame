@@ -2,11 +2,10 @@ package com.bdj.bot_discord.discord;
 
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
 import com.bdj.bot_discord.lobby.Game;
-import com.bdj.bot_discord.mascarade_bot.errors.GameException;
-import com.bdj.bot_discord.mascarade_bot.errors.GameNotFinished;
-import com.bdj.bot_discord.mascarade_bot.errors.NoGameStarted;
-import com.bdj.bot_discord.mascarade_bot.errors.NoLobbyFound;
-import com.bdj.bot_discord.mascarade_bot.game.MascaradeGame;
+import com.bdj.bot_discord.errors.GameException;
+import com.bdj.bot_discord.errors.GameNotFinished;
+import com.bdj.bot_discord.errors.NoGameStarted;
+import com.bdj.bot_discord.errors.NoLobbyFound;
 import com.bdj.bot_discord.lobby.Lobby;
 import net.dv8tion.jda.api.entities.MessageChannel;
 

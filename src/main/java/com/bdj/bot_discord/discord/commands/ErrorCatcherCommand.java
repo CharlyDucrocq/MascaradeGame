@@ -1,7 +1,7 @@
 package com.bdj.bot_discord.discord.commands;
 
 import com.bdj.bot_discord.discord.InOutDiscord;
-import com.bdj.bot_discord.mascarade_bot.errors.GameException;
+import com.bdj.bot_discord.errors.GameException;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
