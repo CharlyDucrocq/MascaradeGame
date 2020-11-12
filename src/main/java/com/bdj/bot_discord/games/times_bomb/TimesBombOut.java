@@ -5,6 +5,8 @@ import com.bdj.bot_discord.utils.choice.ArraysChoice;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class TimesBombOut {
@@ -16,13 +18,17 @@ public class TimesBombOut {
     }
 
     public void printStart(TimesBombGame game) {
-        //TODO
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setTitle("############### **Début de la partie** ###############");
+        bd.addField("Nombre minimum de "+Team.MORIARTY, String.valueOf(game.minBad),true);
+        bd.addField("Nombre maximum de "+Team.MORIARTY, String.valueOf(game.maxBad),true);
+        channel.sendMessage(bd.build()).queue();
     }
 
     public void printNewRound(Round round) {
         EmbedBuilder bd = new EmbedBuilder();
         bd.setTitle("Redistribution des cartes");
-        bd.setThumbnail(Icon.DISTRIBUTION.getIconUrl());
+        //bd.setThumbnail(Icon.DISTRIBUTION.getIconUrl());
         bd.addField("Cartes par main", String.valueOf(round.CARD_BY_HAND),true);
         bd.addField("Nombre de redistribution avant le game over", String.valueOf(round.roundLeftAfterHim()),true);
         channel.sendMessage(bd.build()).queue();
@@ -53,10 +59,24 @@ public class TimesBombOut {
     }
 
     public void printCut(Player currentPlayer, Player target, Card card) {
-        //TODO
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setAuthor(currentPlayer.getName(), null, currentPlayer.getUser().getDiscordUser().getAvatarUrl());
+        bd.setTitle(card.getResultMsg());
+        bd.setThumbnail(card.getIconUrl());
+        bd.setDescription(currentPlayer.toString()+" a coupé chez "+target);
+
+        channel.sendMessage(bd.build()).queue();
     }
 
-    public void printEndGame(TimesBombGame timesBombGame) {
-        //TODO
+    public void printEndGame(TimesBombGame game) {
+        Team winner = game.getWinner();
+
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setTitle("VICTOIRE DES "+winner.name().toUpperCase());
+        if(winner == Team.MORIARTY ) bd.setDescription("La bombe a explosé");
+        else bd.setDescription("La bombe a été désamorcé");
+        bd.setThumbnail(winner.getIconUrl());
+
+        for (Player player : game.getPlayers(winner)) bd.addField(player.getName(),"", false);
     }
 }

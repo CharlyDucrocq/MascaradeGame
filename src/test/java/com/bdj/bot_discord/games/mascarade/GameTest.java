@@ -29,7 +29,7 @@ public class GameTest {
     @BeforeEach
     void init(){
         inOutMock = mock(InOutDiscord.class);
-        Lobby<MascaradeGame> lobby = new DiscordLobby<>(inOutMock);
+        Lobby<MascaradeGame> lobby = new DiscordLobby<>(inOutMock, GlobalParameter.MAX_PLAYERS);
         users = new User[NB_PLAYERS];
         for(int i=0;i<NB_PLAYERS;i++){
             users[i] = mock(User.class);

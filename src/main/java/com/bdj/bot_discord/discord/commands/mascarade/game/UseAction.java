@@ -7,7 +7,7 @@ import com.bdj.bot_discord.errors.BadUser;
 import com.bdj.bot_discord.games.mascarade.GameRound;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import static com.bdj.bot_discord.main.Application.getGame;
+import static com.bdj.bot_discord.main.Application.getMascaradeGame;
 import static com.bdj.bot_discord.main.Application.getUser;
 
 public class UseAction extends ErrorCatcherCommand {
@@ -21,7 +21,7 @@ public class UseAction extends ErrorCatcherCommand {
     @Override
     protected void executeAux(CommandEvent event) {
         User user = getUser(event);
-        GameRound round = getGame(user).getRound();
+        GameRound round = getMascaradeGame(user).getRound();
         if(!user.equals(round.getUser())) throw new BadUser();
         round.useCharacter();
     }

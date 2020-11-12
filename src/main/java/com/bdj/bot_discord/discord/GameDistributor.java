@@ -13,8 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GameDistributor<G extends Game> {
+    private int maxByLobby;
     private Map<User, DiscordLobby<G>> userGame = new HashMap<>();
     private Map<MessageChannel, DiscordLobby<G>> channelGame = new HashMap<>();
+
+    public GameDistributor(int max){
+        maxByLobby = max;
+    }
 
     public DiscordLobby<G> newLobby(User admin, MessageChannel channel){
         DiscordLobby<G> prev = userGame.get(admin);
@@ -30,7 +35,7 @@ public class GameDistributor<G extends Game> {
         }
         if(channelOccupied(channel))
             throw new GameException("Ce channel est déjà occupé");
-        DiscordLobby<G> newOne = new DiscordLobby<>();
+        DiscordLobby<G> newOne = new DiscordLobby<>(maxByLobby);
         userGame.put(admin,newOne);
         newOne.setAdmin(admin);
         associate(channel,newOne);
@@ -88,7 +93,9 @@ public class GameDistributor<G extends Game> {
     }
 
     public DiscordLobby<G> getLobby(User user) {
-        return userGame.get(user);
+        DiscordLobby<G> lobby = userGame.get(user);
+        if (lobby == null) throw new NoLobbyFound();
+        return lobby;
     }
 
     public DiscordLobby<G> getLobby(MessageChannel channel){

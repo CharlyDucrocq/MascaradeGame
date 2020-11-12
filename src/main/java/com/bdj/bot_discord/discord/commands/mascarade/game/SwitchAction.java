@@ -27,7 +27,7 @@ public class SwitchAction extends ErrorCatcherCommand {
     @Override
     protected void executeAux(CommandEvent event) {
         User userWhoAsk = getUser(event);
-        MascaradeGame game = getGame(userWhoAsk);
+        MascaradeGame game = getMascaradeGame(userWhoAsk);
         GameRound round = game.getRound();
 
         if(!userWhoAsk.equals(round.getUser())) throw new BadUser();

@@ -15,7 +15,7 @@ public class TimesBombGame implements Game {
     private Random random = new Random();
 
     private boolean gameOver = false;
-    private boolean goodVictory;
+    private Team winner;
     private LinkedList<Player> players;
     private Deck cardsLeft;
 
@@ -72,11 +72,11 @@ public class TimesBombGame implements Game {
         switch (card){
             case CABLE: {
                 if(++nbCableCut >=cardsLeft.NB_CABLE) gameOver=true;
-                goodVictory = true;
+                winner = Team.SHERLOCK;
             }
             case BOMB: {
                 gameOver = true;
-                goodVictory = false;
+                winner = Team.MORIARTY;
             }
             case FAKE:
         }
@@ -88,7 +88,7 @@ public class TimesBombGame implements Game {
         if (round.over()) {
             rounds.add(round);
             if (round.isTheLast()) {
-                goodVictory = false;
+                winner = Team.MORIARTY;
                 endGame();
             }
             for (Player player : players) cardsLeft.addAll(player.getBackCardLeft());
@@ -138,5 +138,15 @@ public class TimesBombGame implements Game {
 
     public int cutLeftBeforeNewRound() {
         return round.cutLeft();
+    }
+
+    public Team getWinner() {
+        return winner;
+    }
+
+    List<Player> getPlayers(Team winner) {
+        LinkedList<Player> result = new LinkedList<>();
+        for (Player player : this.players) if (player.getTeam() == winner) result.add(player);
+        return result;
     }
 }

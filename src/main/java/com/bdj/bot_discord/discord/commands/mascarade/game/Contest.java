@@ -10,7 +10,7 @@ import com.bdj.bot_discord.games.mascarade.MascaradeGame;
 import com.bdj.bot_discord.games.mascarade.Player;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import static com.bdj.bot_discord.main.Application.getGame;
+import static com.bdj.bot_discord.main.Application.getMascaradeGame;
 import static com.bdj.bot_discord.main.Application.getUser;
 
 public class Contest extends ErrorCatcherCommand {
@@ -24,7 +24,7 @@ public class Contest extends ErrorCatcherCommand {
     @Override
     protected void executeAux(CommandEvent event) {
         User user = getUser(event);
-        MascaradeGame game = getGame(user);
+        MascaradeGame game = getMascaradeGame(user);
         GameRound round = game.getRound();
 
         if(user.equals(round.getUser())) throw new BadUser();

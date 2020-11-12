@@ -20,7 +20,7 @@ public class PeekAction  extends ErrorCatcherCommand {
     @Override
     protected void executeAux(CommandEvent event) {
         User user = getUser(event);
-        GameRound round = getGame(user).getRound();
+        GameRound round = getMascaradeGame(user).getRound();
         if(!user.equals(round.getUser())) throw new BadUser();
 
         round.peekCharacter();

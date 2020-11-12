@@ -6,6 +6,6 @@ public enum  Team {
     ;
 
     public String getIconUrl(){
-        return "";
+        return "https://github.com/CharlyDucrocq/MascaradeGame/blob/main/rsrc/img/times_bomb_icon/"+name().toLowerCase()+"_icon.png?raw=true";
     }
 }

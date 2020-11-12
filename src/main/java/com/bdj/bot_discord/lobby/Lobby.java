@@ -9,9 +9,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Lobby<G extends Game> {
+    int maxPlayer;
     List<User> users = new LinkedList<>();
     User admin;
     G game;
+
+    public Lobby(int max){
+        maxPlayer = max;
+    }
 
     public void addPlayer(User user){
         if(users.size()== GlobalParameter.MAX_PLAYERS) throw new GameFullException();

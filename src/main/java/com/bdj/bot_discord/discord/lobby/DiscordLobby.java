@@ -10,11 +10,13 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 public class DiscordLobby<G extends Game> extends Lobby<G> {
     final InOutDiscord inOut;
 
-    public DiscordLobby(){
+    public DiscordLobby(int max){
+        super(max);
         inOut = new InOutDiscord();
     }
 
-    public DiscordLobby(InOutDiscord inOutMock) {
+    public DiscordLobby(InOutDiscord inOutMock, int max){
+        super(max);
         inOut = inOutMock;
     }
 

@@ -3,8 +3,12 @@ package com.bdj.bot_discord.main;
 import com.bdj.bot_discord.discord.GameDistributor;
 import com.bdj.bot_discord.discord.User;
 import com.bdj.bot_discord.discord.commands.mascarade.MascaradeCommands;
+import com.bdj.bot_discord.discord.commands.times_bomb.TimesBombCommands;
 import com.bdj.bot_discord.errors.InvalidCommand;
+import com.bdj.bot_discord.games.mascarade.GlobalParameter;
 import com.bdj.bot_discord.games.mascarade.MascaradeGame;
+import com.bdj.bot_discord.games.times_bomb.TimesBombFactory;
+import com.bdj.bot_discord.games.times_bomb.TimesBombGame;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import net.dv8tion.jda.api.*;
@@ -26,11 +30,16 @@ import static com.bdj.bot_discord.main.TokenGhost.TOKEN;
 
 public class Application extends ListenerAdapter {
     public static Random random = new Random();
-    public static GameDistributor<MascaradeGame> mascaradeLobbies = new GameDistributor<>();
+    public static GameDistributor<MascaradeGame> mascaradeLobbies = new GameDistributor<>(GlobalParameter.MAX_PLAYERS);
+    public static GameDistributor<TimesBombGame> timesBombLobbies = new GameDistributor<>(TimesBombFactory.MAX_PLAYER);
     public static UserList userList = new UserList();
 
-    public static MascaradeGame getGame(User user){
+    public static MascaradeGame getMascaradeGame(User user){
         return (MascaradeGame) mascaradeLobbies.getGame(user);
+    }
+
+    public static TimesBombGame getTBGame(User user){
+        return (TimesBombGame) timesBombLobbies.getGame(user);
     }
 
     public static User getUser(MessageReceivedEvent event) {
@@ -39,10 +48,6 @@ public class Application extends ListenerAdapter {
 
     public static User getUser(CommandEvent event) {
         return userList.getUser(new User(event.getAuthor()));
-    }
-
-    public static User getUserByCall(String call) {
-        return userList.getUser(call);
     }
 
     public static String extractFirstParameter(String msg) {
@@ -86,6 +91,7 @@ public class Application extends ListenerAdapter {
         //builder.addEventListeners(new Application());
 
         builder.addEventListeners(new MascaradeCommands(MY_ID).build());
+        builder.addEventListeners(new TimesBombCommands(MY_ID).build());
         builder.addEventListeners(waiter);
         builder.build();
     }
