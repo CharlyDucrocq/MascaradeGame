@@ -16,7 +16,13 @@ public enum MyEmote {
 
     YES("white_check_mark"),
     NOP("negative_squared_cross_mark"),
-    OBJECTION("speaking_head"),
+    OBJECTION("thumbsdown"),
+
+    RED("red_square"),
+    BLUE("blue_square"),
+    POOP("poop"),
+    DEATH("skull"),
+    QUESTION("grey_question"),
     ;
 
     public final String name;
