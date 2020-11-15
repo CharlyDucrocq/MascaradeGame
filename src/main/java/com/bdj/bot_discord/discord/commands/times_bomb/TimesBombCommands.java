@@ -22,7 +22,7 @@ public class TimesBombCommands extends CommandClientBuilder {
         Command[] commands = new Command[]{
                 new LobbyCreation<>(Application.timesBombLobbies),
                 new LobbyJoin<>(Application.timesBombLobbies),
-                new LobbyInfo(Application.timesBombLobbies, "Time's Bomb"),
+                new LobbyInfo<>(Application.timesBombLobbies, "Time's Bomb"),
                 new StartGame<>(Application.timesBombLobbies, TimesBombFactory.class)
         };
 

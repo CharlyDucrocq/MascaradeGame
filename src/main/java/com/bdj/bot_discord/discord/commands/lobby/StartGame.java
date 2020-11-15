@@ -37,10 +37,9 @@ public class StartGame<G extends Game> extends ErrorCatcherCommand {
 
         try {
             lobby.createGame(factoryClass.getDeclaredConstructor().newInstance());
+            lobby.getGame().start();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        lobby.getGame().start();
     }
 }

@@ -39,7 +39,8 @@ public abstract class Lobby<G extends Game> {
         factory.setPlayers(users);
         setInOut(factory);
         if(!factory.haveEnoughPlayer()) throw new NotEnoughPlayers();
-        return factory.createGame();
+        game =factory.createGame();
+        return game;
     }
 
     protected abstract void setInOut(GameFactory<? extends G> factory);

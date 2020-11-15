@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
+import java.awt.*;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
@@ -23,6 +24,7 @@ public class QuestionSender {
 
     private User target;
     private Message msg;
+    private Color color;
 
     public QuestionSender(QuestionAnswers questionAnswers){
         question = questionAnswers;
@@ -36,6 +38,7 @@ public class QuestionSender {
 
         bd.setTitle(question.getQuestion());
         bd.setDescription("Cliquez sur la reaction associé à votre choix.------------------------------------------------------------->");
+        if(color != null) bd.setColor(color);
 
         int i = 0;
         for (Answer answer : question.getAnswers()) {
@@ -78,5 +81,9 @@ public class QuestionSender {
 
     public void addPostEvent(Consumer<Answer> action) {
         this.afterAnswerAction = action;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
