@@ -4,14 +4,21 @@ import com.bdj.bot_discord.discord.User;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class Player {
     private User user;
     private LinkedList<Card> hand = new LinkedList<>();
-    private Team team = Team.MORIARTY;
+    private Team team = Team.SHERLOCK;
+    int id = 0;
 
     public Player(User user){
         this.user = user;
+    }
+
+    public Player(User user, int id){ //for test
+        this(user);
+        this.id = id;
     }
 
     public void addCard(Card card){
@@ -51,5 +58,30 @@ public class Player {
     @Override
     public String toString() {
         return getName()+"("+nbCardLeft()+" cards)";
+    }
+
+    public int getNbCardByType(Card type) {
+        int count =0;
+        for (Card card : hand){
+            if(card == type){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player)) return false;
+        Player player = (Player) o;
+        return Objects.equals(user, player.user) &&
+                Objects.equals(hand, player.hand) &&
+                team == player.team;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, team, id);
     }
 }

@@ -29,8 +29,9 @@ public class TimesBombGame implements Game {
     public TimesBombGame(Player[] players, int minBad, int maxBad) {
         this.maxBad = maxBad;
         this.minBad = minBad;
-        int nbBad = random.nextInt(maxBad-minBad)+minBad;
+        int nbBad = maxBad-minBad ==0 ? maxBad : (random.nextInt(maxBad-minBad)+minBad);
         List<Player> start = new LinkedList<>(Arrays.asList(players));
+
         LinkedList<Player> shorted = new LinkedList<>();
         for (int i=0;i<nbBad;i++) {
             Player newBad = start.remove(random.nextInt(start.size()));
@@ -43,7 +44,6 @@ public class TimesBombGame implements Game {
         for (Player player : shorted) this.players.add(random.nextInt(++i), player);
         this.currentPlayer = getFirstToPlay();
         this.cardsLeft = new Deck(players.length);
-        this.round = new Round(this.players, cardsLeft, out);
     }
 
     public void setOut(TimesBombOut out) {
@@ -57,6 +57,7 @@ public class TimesBombGame implements Game {
     @Override
     public void start() {
         out.printStart(this);
+        this.round = new Round(this.players, cardsLeft, out);
         playersTurn();
     }
 
@@ -73,17 +74,23 @@ public class TimesBombGame implements Game {
             case CABLE: {
                 if(++nbCableCut >=cardsLeft.NB_CABLE) gameOver=true;
                 winner = Team.SHERLOCK;
+                break;
             }
             case BOMB: {
                 gameOver = true;
                 winner = Team.MORIARTY;
+                break;
             }
             case FAKE:
+                break;
         }
 
         out.printCut(currentPlayer, target, card);
 
-        if (gameOver) endGame();
+        if (gameOver) {
+            endGame();
+            return;
+        }
 
         if (round.over()) {
             rounds.add(round);
@@ -108,6 +115,7 @@ public class TimesBombGame implements Game {
     List<Player> getCuteablePlayer(){
         LinkedList<Player> cuteable = new LinkedList<>(players);
         cuteable.remove(prevPlayer);
+        cuteable.remove(currentPlayer);
         return cuteable;
     }
 
@@ -132,6 +140,10 @@ public class TimesBombGame implements Game {
         return currentPlayer;
     }
 
+    public LinkedList<Player> getPlayers() {
+        return players;
+    }
+
     public int nbCableLeft() {
         return cardsLeft.NB_CABLE - nbCableCut;
     }
@@ -144,9 +156,9 @@ public class TimesBombGame implements Game {
         return winner;
     }
 
-    List<Player> getPlayers(Team winner) {
+    List<Player> getPlayersByTeam(Team team) {
         LinkedList<Player> result = new LinkedList<>();
-        for (Player player : this.players) if (player.getTeam() == winner) result.add(player);
+        for (Player player : this.players) if (player.getTeam() == team) result.add(player);
         return result;
     }
 }

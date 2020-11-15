@@ -1,18 +1,28 @@
 package com.bdj.bot_discord.games.times_bomb;
 
-public enum Card {
-    CABLE("Nouveau cable désamorcé !"),
-    FAKE("Faux cable.. La partie continue"),
-    BOMB("BOOOOOOOUM ! Les "+Team.MORIARTY+"s ont fait explosé leur bombe !"),
-    ;
-    String result;
+import java.awt.*;
 
-    Card(String txt){
+public enum Card {
+    CABLE(Team.SHERLOCK.color,"Nouveau cable désamorcé !"),
+    FAKE(Color.darkGray, "Faux cable.. La partie continue"),
+    BOMB(Team.MORIARTY.color, "BOOOOOOOUM ! Les "+Team.MORIARTY+"s ont fait explosé leur bombe !"),
+    ;
+
+
+    private String result;
+    public final Color color;
+
+    Card(Color color, String txt){
         result =txt;
+        this.color = color;
     }
 
     public String getResultMsg() {
         return result;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     public String getIconUrl() {

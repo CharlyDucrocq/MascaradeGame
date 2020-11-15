@@ -17,7 +17,7 @@ public class Round {
             count++;
         }
         CARD_BY_HAND = count;
-        out.printNewRound(this);
+        out.printNewRound(this, players);
     }
 
     void newTurn(Player player, Player target, Card card){
@@ -33,7 +33,7 @@ public class Round {
     }
 
     public int roundLeftAfterHim() {
-        return CARD_BY_HAND_LIMIT - CARD_BY_HAND;
+        return CARD_BY_HAND - CARD_BY_HAND_LIMIT;
     }
 
     public boolean isTheLast(){
