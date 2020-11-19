@@ -70,7 +70,7 @@ public class CountDown implements Runnable {
 
     private synchronized void deleteMessage() {
         if(message != null){
-            if (endMsg == null || !on) {
+            if (endMsg == null || endMsg.isEmpty() || !on) {
                 message.delete().queue();
             } else {
                 message.editMessage(endMsg).queue();
@@ -84,6 +84,7 @@ public class CountDown implements Runnable {
     }
 
     public synchronized void kill(){
+        if(!on) return;
         on = false;
         deleteMessage();
     }

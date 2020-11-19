@@ -47,7 +47,10 @@ public class ReactionAnalyser {
     }
 
     private synchronized boolean check(MessageReactionAddEvent e, MyEmote emote){
-        return e.getMessageId().equals(msg.getId()) &&
+        User user = e.getUser();
+        if(user == null) return false;
+        return !e.getUser().isBot() &&
+                e.getMessageId().equals(msg.getId()) &&
                 e.getReactionEmote().getEmoji().equals(emote.getId()) &&
                 (target == null || target.equals(e.getUser()));
     }
