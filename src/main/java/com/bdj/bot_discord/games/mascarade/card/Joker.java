@@ -12,10 +12,9 @@ public class Joker extends CardWithInteraction {
     private final Player[] players;
     private Player target1;
     private Player target2;
-    MascaradeOut out ;
 
     public Joker(Player player, TableRound table, MascaradeOut out) {
-        super(Character.SPY, player, out);
+        super(Character.JOKER, player, out);
         players = table.getPlayers();
     }
 

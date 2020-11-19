@@ -1,13 +1,20 @@
 package com.bdj.bot_discord.discord.commands;
 
 import com.bdj.bot_discord.discord.User;
-import com.bdj.bot_discord.games.mascarade.MascaradeOut;
+import com.bdj.bot_discord.games.mascarade.MascaradeFactory;
 import com.bdj.bot_discord.games.mascarade.Player;
-import com.bdj.bot_discord.games.mascarade.card.Character;
+import com.bdj.bot_discord.games.times_bomb.TimesBombFactory;
+import com.bdj.bot_discord.games.mascarade.MascaradeGame;
+import com.bdj.bot_discord.games.mascarade.MascaradeOut;
+import com.bdj.bot_discord.lobby.Game;
+import com.bdj.bot_discord.main.Application;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
+
 public class TestCommand extends ErrorCatcherCommand {
-    private MyLock lock = new MyLock();
 
     public TestCommand(){
         this.name = "test";
@@ -17,26 +24,29 @@ public class TestCommand extends ErrorCatcherCommand {
 
     @Override
     protected void executeAux(CommandEvent event) {
-        Player player = new Player(new User(event.getAuthor()));
-        player.setCurrentCharacter(Character.WITCH);
-        MascaradeOut out = new MascaradeOut(event.getChannel());
-        out.printSwitch(player, player, true);
-    }
+        User user = Application.getUser(event);
 
-    private static class MyLock{
-        private boolean locked = false;
-        public synchronized void lock(){
-            try {
-                if(locked) wait();
-            } catch (Exception e){
-                e.printStackTrace();
-            }
-            locked = true;
-        }
+        //  TEST FOR CODE NAME
+//        event.getChannel().sendMessage(new DiscordCodeNameTable(new Random().nextBoolean()).getEmbedWithoutReveled()).queue();
+//        event.getChannel().sendMessage(new DiscordCodeNameTable(new Random().nextBoolean()).getEmbedWithReveled()).queue();
 
-        public synchronized void unlock(){
-            locked = false;
-            notifyAll();
-        }
+        //  TEST FOR TIMES BOMB
+//        int NB_PLAYER = 4;
+//        Player[] players = new Player[NB_PLAYER];
+//        for (int i = 0;i<NB_PLAYER;i++) players[i]=new Player(user, i);
+//        TimesBombGame game = new TimesBombGame(players,1,2);
+//        game.setOut(new TimesBombOut(event.getChannel()));
+//        game.start();
+
+        // TEST FOR MASCARADE
+        int NB_PLAYER = 13;
+        Player[] players = new Player[NB_PLAYER];
+        for (int i = 0;i<NB_PLAYER;i++) players[i]=new Player(user, i);
+        MascaradeFactory factory = new MascaradeFactory();
+        factory.setPlayers(players);
+        factory.setDiscordOut(event.getChannel());
+        MascaradeGame game = factory.createGame();
+        game.disableStartingTurn();
+        game.start();
     }
 }

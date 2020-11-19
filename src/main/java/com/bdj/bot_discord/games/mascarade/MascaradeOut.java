@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -96,11 +97,10 @@ public class MascaradeOut {
     public void askForSwitch(GameRound round) {
         MascaradeGame game = round.getGame();
         net.dv8tion.jda.api.entities.User user = round.player.getUser().getDiscordUser();
-        ArraysChoice<User> userChoice = new ArraysChoice<>(
+        ArraysChoice<Player> userChoice = new ArraysChoice<>(
                 "Avec qui voulez-vous échanger (ou pas) ?",
-                game.getUsers() ,
-                otherUser ->{
-                    Player otherPlayer = game.getPlayer(otherUser);
+                game.getTable().getPlayers() ,
+                otherPlayer ->{
                     YesOrNoQuestion yesOrNo = new YesOrNoQuestion(
                             "Voulez-vous réellement échanger les cartes ?",
                             () -> round.switchCard(otherPlayer, true),
@@ -162,6 +162,7 @@ public class MascaradeOut {
         bd.setTitle("Action de tour");
         bd.setThumbnail(gameRound.charaChose.getIconUrl());
         bd.setDescription(gameRound.player.toString()+" affirme être "+gameRound.charaChose.toString());
+        bd.setFooter("Vous pouvez contester avec "+MyEmote.OBJECTION.getId());
         Message msg = channel.sendMessage(bd.build()).complete();
 
         ReactionAnalyser analyser = new ReactionAnalyser(msg);
@@ -172,10 +173,11 @@ public class MascaradeOut {
         if (countDown != null) countDown.kill();
         countDown = new CountDown(GlobalParameter.CHOICE_USE_TIME_IN_SEC, channel,
                 "Il reste ", "s avant de pouvoir utiliser le pouvoir",
-                "Vous pouvez utiliser le pouvoir avec !"+ new UseAction().getName(),
+                "",
                 ()-> {
                     analyser.killAll();
-                    gameRound.askForUse();
+                    gameRound.useCharacter();
+                    countDown=null;
                 });
     }
 
@@ -251,5 +253,14 @@ public class MascaradeOut {
         sender1.setTarget(player.getUser().getDiscordUser());
         sender1.disableEndMsg();
         sender1.send(this.channel);
+    }
+
+    public void printError(Exception e) {
+        EmbedBuilder eb = new EmbedBuilder();
+        eb.setTitle("Erreur", null);
+        eb.setDescription(e.getMessage());
+        eb.setColor(Color.red);
+
+        channel.sendMessage(eb.build()).queue();
     }
 }

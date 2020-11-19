@@ -6,7 +6,11 @@ import com.bdj.bot_discord.games.mascarade.card.Character;
 public class StartingRound extends GameRound {
     public StartingRound(MascaradeGame game, Player next) {
         super(game, next);
-        actionsAvailable = new RoundAction[]{ RoundAction.PEEK };
+        actionsAvailable = new RoundAction[]{ RoundAction.SWITCH };
+    }
+
+    public RoundAction[] getActionsAvailable() {
+        return new RoundAction[]{ RoundAction.SWITCH };
     }
 
     @Override

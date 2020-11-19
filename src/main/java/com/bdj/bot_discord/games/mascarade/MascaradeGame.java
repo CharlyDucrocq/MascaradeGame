@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MascaradeGame implements Game {
-    public final int nbStartingTurn; // during only switch available
+    public int nbStartingTurn; // during only switch available
 
     private TableRound tableRound;
     private GameRound round;
@@ -21,6 +21,10 @@ public class MascaradeGame implements Game {
     public MascaradeGame(Player[] players){
         tableRound = new TableRound(players);
         nbStartingTurn = players.length;
+    }
+
+    public void disableStartingTurn(){
+        this.nbStartingTurn = 0;
     }
 
     public void start() {

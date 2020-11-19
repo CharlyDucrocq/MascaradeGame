@@ -11,12 +11,18 @@ public class Player {
     private Character currentCharacter;
     private Purse purse = new Purse();
     private User user;
+    private int id = 0;
 
     private boolean haveWin = false;
 
 
     public Player(User user){
         this.user = user;
+    }
+
+    public Player(User user, int id){//for test
+        this(user);
+        this.id = id;
     }
 
     public void setCurrentCharacter(Character c) {
@@ -51,7 +57,7 @@ public class Player {
 
     @Override
     public String toString() {
-        return user.getName()+"("+purse.getValue()+"£)";
+        return user.getName()+(id==0 ?"":id)+"("+purse.getValue()+"£)";
     }
 
     @Override

@@ -11,7 +11,6 @@ import com.bdj.bot_discord.utils.choice.YesOrNoQuestion;
 public class Spy extends CardWithInteraction {
     private final Player[] players;
     private Player target;
-    MascaradeOut out ;
 
     public Spy(Player player, TableRound table, MascaradeOut out) {
         super(Character.SPY, player, out);

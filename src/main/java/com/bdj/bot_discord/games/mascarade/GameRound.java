@@ -81,7 +81,18 @@ public class GameRound {
     }
 
     public void useCharacter(){
-        new Thread(()->useCharacterOnlyForTest(charaChose)).start(); // separated for test
+        new Thread(this::useCharacterWithExceptionCatcher).start(); // separated for test
+    }
+
+    private void useCharacterWithExceptionCatcher(){
+        try {
+            useCharacterOnlyForTest(charaChose);
+        } catch (GameException e){
+            out.printError(e);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        if(!isEnded) endTurn();
     }
 
     synchronized void useCharacterOnlyForTest(CardCreator creator){
