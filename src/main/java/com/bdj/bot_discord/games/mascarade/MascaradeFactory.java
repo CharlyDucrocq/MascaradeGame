@@ -157,8 +157,11 @@ public class MascaradeFactory implements GameFactory<MascaradeGame> {
         for(Player p : players){
             p.setCurrentCharacter(characters.remove(random.nextInt(characters.size())));
         }
+        for(Player p : players){
+            characters.add(p.getCurrentCharacter());
+        }
 
-        MascaradeGame game = new MascaradeGame(players);
+        MascaradeGame game = new MascaradeGame(players, characters);
         game.setOut(out);
         return game;
     }

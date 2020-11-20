@@ -23,6 +23,8 @@ public enum MyEmote {
     POOP("poop"),
     DEATH("skull"),
     QUESTION("grey_question"),
+
+    DICE("game_die"),
     ;
 
     public final String name;

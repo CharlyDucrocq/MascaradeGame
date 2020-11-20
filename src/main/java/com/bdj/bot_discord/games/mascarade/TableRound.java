@@ -2,6 +2,9 @@ package com.bdj.bot_discord.games.mascarade;
 
 import com.bdj.bot_discord.discord.User;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class TableRound {
     private Player[] players;
     private int current = -1;
@@ -84,5 +87,11 @@ public class TableRound {
 
     public Player[] getPlayers() {
         return players;
+    }
+
+    public List<Player> getPlayersWithout(Player toNotAdd) {
+        List<Player> result = new LinkedList<>();
+        for (Player toAdd :players) if (!toAdd.equals(toNotAdd)) result.add(toAdd);
+        return result;
     }
 }

@@ -14,7 +14,7 @@ public class CharacterRecap extends ErrorCatcherCommand {
         this.name = "charactersRecap";
         this.aliases = new String[]{"recapCharacters", "characters","personnages", "perso"};
         this.help = "Affichage des personnages en jeu et de leur utilité.";
-        this.category = MyCommandCategory.GAME_ACTION;
+        this.category = MyCommandCategory.GAME_INFO;
     }
 
     @Override

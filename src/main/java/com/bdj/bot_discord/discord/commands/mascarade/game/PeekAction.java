@@ -14,7 +14,7 @@ public class PeekAction  extends ErrorCatcherCommand {
         this.name = "peek";
         this.aliases = new String[]{"peekCard", "peekAction","regarder"};
         this.help = "Regarder secretement mon personnage.";
-        this.category = MyCommandCategory.GAME_ACTION;
+        this.category = MyCommandCategory.GAME_INFO;
     }
 
     @Override

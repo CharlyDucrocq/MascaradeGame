@@ -18,6 +18,21 @@ import java.util.Comparator;
 import java.util.List;
 
 public class MascaradeOut {
+    private enum ColorTheme {
+        QUESTION(Color.green),
+        START_ROUND(Color.orange),
+        INFO(new Color(50,50,200)),
+        ACTION(new Color(120,90,150)),
+        USE_CHARACTER(new Color(200,250,150)),
+        PENALTY(new Color(220,50,40)),
+        ;
+
+        final Color color;
+        ColorTheme(Color color) {
+            this.color = color;
+        }
+    }
+
     private MessageChannel channel;
 
     public MascaradeOut(MessageChannel channel){
@@ -25,15 +40,18 @@ public class MascaradeOut {
     }
 
     public void printStart(MascaradeGame game){
-        channel.sendMessage(
-                "############### **Début de la partie** ###############\n"
-        ).queue();
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setTitle("############### **Début de la partie** ###############");
+        bd.setColor(ColorTheme.START_ROUND.color);
+        channel.sendMessage(bd.build()).queue();
+
         printCharactersRecap(game.getCharactersList());
 
-        EmbedBuilder bd = new EmbedBuilder();
+        bd = new EmbedBuilder();
         bd.setTitle("Configuration de départ des Joueurs :\n");
+        bd.setColor(ColorTheme.INFO.color);
         for (Player player : game.getTable().getPlayers()){
-            bd.addField(player.toString(),player.getCurrentCharacter().toString(),false);
+            bd.addField(player.toString(),player.getCurrentCharacter().toString(),true);
         }
         channel.sendMessage(bd.build()).queue();
     }
@@ -44,7 +62,7 @@ public class MascaradeOut {
 
         eb.setTitle("Les Personnages", null);
 
-        eb.setColor(ColorTheme.INFO.getColor());
+        eb.setColor(ColorTheme.INFO.color);
 
         for (Character character : charactersList) eb.addField(character.toString(), character.getDescription(), false);
 
@@ -53,9 +71,10 @@ public class MascaradeOut {
 
     public void printPlayerRecap(Player[] players){
         EmbedBuilder bd = new EmbedBuilder();
-        bd.setTitle("**Situation actuel :**");
+        bd.setTitle("Situation actuel :");
+        bd.setColor(ColorTheme.INFO.color);
         for (Player player : players){
-            bd.addField(" - "+player.toString(),"",false);
+            bd.addField(" - "+player.toString(),"",true);
         }
         channel.sendMessage(bd.build()).queue();
     }
@@ -64,12 +83,14 @@ public class MascaradeOut {
         EmbedBuilder bd = new EmbedBuilder();
         bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
         bd.setTitle("Action de tour");
+        bd.setColor(ColorTheme.ACTION.color);
         bd.setThumbnail(RoundAction.PEEK.getIconUrl());
         bd.setDescription(player.toString()+" regarde son role.");
         channel.sendMessage(bd.build()).queue();
 
         bd = new EmbedBuilder();
         bd.setTitle("Vous êtes " +player.getCurrentCharacter().toString());
+        bd.setColor(ColorTheme.ACTION.color);
         bd.setDescription(player.getCurrentCharacter().getDescription());
         bd.setThumbnail(player.getCurrentCharacter().getIconUrl());
         player.getUser().getDiscordUser().openPrivateChannel().complete().sendMessage(bd.build()).queue();
@@ -78,6 +99,7 @@ public class MascaradeOut {
     public void printStartTurn(GameRound gameRound) {
         Player player = gameRound.player;
         EmbedBuilder bd = new EmbedBuilder();
+        bd.setColor(ColorTheme.START_ROUND.color);
         bd.setTitle("Nouveau tour");
         bd.setThumbnail(player.getUser().getDiscordUser().getAvatarUrl());
         bd.setDescription("C'est au tour de "+gameRound.player.toString());
@@ -91,6 +113,7 @@ public class MascaradeOut {
                 action -> action.doAction(round)));
         sender.disableEndMsg();
         sender.setTarget(round.player.getUser().getDiscordUser());
+        sender.setColor(ColorTheme.QUESTION.color);
         sender.send(channel);
     }
 
@@ -99,7 +122,7 @@ public class MascaradeOut {
         net.dv8tion.jda.api.entities.User user = round.player.getUser().getDiscordUser();
         ArraysChoice<Player> userChoice = new ArraysChoice<>(
                 "Avec qui voulez-vous échanger (ou pas) ?",
-                game.getTable().getPlayers() ,
+                game.getTable().getPlayersWithout(round.player) ,
                 otherPlayer ->{
                     YesOrNoQuestion yesOrNo = new YesOrNoQuestion(
                             "Voulez-vous réellement échanger les cartes ?",
@@ -107,12 +130,14 @@ public class MascaradeOut {
                             () -> round.switchCard(otherPlayer, false));
                     QuestionSender sender = new QuestionSender(yesOrNo);
                     sender.disableEndMsg();
+                    sender.setColor(ColorTheme.QUESTION.color);
                     sender.setTarget(user);
                     sender.send(user.openPrivateChannel().complete());
                 });
         QuestionSender sender = new QuestionSender(userChoice);
         sender.disableEndMsg();
         sender.setTarget(user);
+        sender.setColor(ColorTheme.QUESTION.color);
         sender.send(channel);
     }
 
@@ -127,6 +152,7 @@ public class MascaradeOut {
         bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
         bd.setTitle("Action de tour");
         bd.setThumbnail(RoundAction.SWITCH.getIconUrl());
+        bd.setColor(ColorTheme.ACTION.color);
         bd.setDescription(player.toString()+" échange (ou pas) ses cartes avec "+other.toString());
         channel.sendMessage(bd.build()).queue();
     }
@@ -149,6 +175,7 @@ public class MascaradeOut {
         QuestionSender sender = new QuestionSender(charChoice);
         sender.disableEndMsg();
         sender.setTarget(user);
+        sender.setColor(ColorTheme.QUESTION.color);
         sender.send(channel);
     }
 
@@ -161,6 +188,7 @@ public class MascaradeOut {
         bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
         bd.setTitle("Action de tour");
         bd.setThumbnail(gameRound.charaChose.getIconUrl());
+        bd.setColor(ColorTheme.ACTION.color);
         bd.setDescription(gameRound.player.toString()+" affirme être "+gameRound.charaChose.toString());
         bd.setFooter("Vous pouvez contester avec "+MyEmote.OBJECTION.getId());
         Message msg = channel.sendMessage(bd.build()).complete();
@@ -188,6 +216,7 @@ public class MascaradeOut {
         bd.setTitle(player.toString()+" a utilisé le pouvoir "+charaChose.getType().toString());
         bd.setThumbnail(charaChose.getType().getIconUrl());
         bd.setDescription(charaChose.getDescription());
+        bd.setColor(ColorTheme.USE_CHARACTER.color);
         channel.sendMessage(bd.build()).queue();
     }
 
@@ -195,26 +224,28 @@ public class MascaradeOut {
         EmbedBuilder bd = new EmbedBuilder();
         bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
         bd.setTitle(player.toString()+" : perdu, vous étiez "+player.getCurrentCharacter().toString()+"... ");
+        bd.setColor(ColorTheme.PENALTY.color);
         bd.setThumbnail(RoundAction.penalityIconUrl);
         bd.setDescription("Vous avez payé "+GlobalParameter.PENALTY+" piece(s) d'or à la banque.");
         channel.sendMessage(bd.build()).queue();
     }
 
     public void printEnd(MascaradeGame game) {
-        channel.sendMessage(
-                "############### **Fin de la partie** ###############\n" +
-                "##################################################"
-        ).queue();
+        EmbedBuilder bd = new EmbedBuilder();
+        bd.setTitle("############### Fin de la partie ###############\n" +
+                    "################################################");
+        bd.setColor(ColorTheme.START_ROUND.color);
+        channel.sendMessage(bd.build()).queue();
     }
 
     public void printPodium(TableRound tableRound) {
         EmbedBuilder bd = new EmbedBuilder();
-        bd.setTitle("#################### **Poduim** ####################**");
+        bd.setTitle("#################### Poduim ####################**");
         int i=1;
         List<Player> players = Arrays.asList(tableRound.getPlayers());
         players.sort(Comparator.comparing(p->(-p.getPurse().getValue())));
         for (Player player : players) {
-            bd.addField(String.valueOf(i++),player.toString(),false);
+            bd.addField(i++ +"  -  "+player.toString(),null,false);
         }
         channel.sendMessage(bd.build()).queue();
     }
@@ -224,6 +255,7 @@ public class MascaradeOut {
         bd.setTitle("Vous êtes " +player.getCurrentCharacter().toString());
         bd.setAuthor(player.toString(),null,player.getUser().getDiscordUser().getAvatarUrl());
         bd.setDescription(player.getCurrentCharacter().getDescription());
+        bd.setColor(ColorTheme.INFO.color);
         bd.setThumbnail(player.getCurrentCharacter().getIconUrl());
         player.getUser().getDiscordUser().openPrivateChannel().complete().sendMessage(bd.build()).queue();
 
@@ -231,6 +263,7 @@ public class MascaradeOut {
         bd.setTitle(target.toString()+" est " +target.getCurrentCharacter().toString());
         bd.setAuthor(target.toString(),null,target.getUser().getDiscordUser().getAvatarUrl());
         bd.setDescription(target.getCurrentCharacter().getDescription());
+        bd.setColor(ColorTheme.INFO.color);
         bd.setThumbnail(target.getCurrentCharacter().getIconUrl());
         player.getUser().getDiscordUser().openPrivateChannel().complete().sendMessage(bd.build()).queue();
     }
@@ -247,11 +280,13 @@ public class MascaradeOut {
                     ));
                     sender2.setTarget(target.getUser().getDiscordUser());
                     sender2.disableEndMsg();
+                    sender2.setColor(ColorTheme.QUESTION.color);
                     sender2.send(this.channel);
                 }
         ));
         sender1.setTarget(player.getUser().getDiscordUser());
         sender1.disableEndMsg();
+        sender1.setColor(ColorTheme.QUESTION.color);
         sender1.send(this.channel);
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 public class Inquisitor  extends CardWithInteraction {
     public final static int TAX_COIN = 4;
 
-    public final Player[] players;
+    public final List<Player> players;
     public final List<Character> characters;
 
     public Player target;
@@ -18,7 +18,7 @@ public class Inquisitor  extends CardWithInteraction {
 
     public Inquisitor(Player player, MascaradeGame game) {
         super(Character.INQUISITOR, player, game.getOut());
-        players = game.getTable().getPlayers();
+        players = game.getTable().getPlayersWithout(player);
         characters = game.getCharactersList();
     }
 

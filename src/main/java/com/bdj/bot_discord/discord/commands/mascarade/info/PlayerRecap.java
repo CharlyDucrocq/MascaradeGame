@@ -14,7 +14,7 @@ public class PlayerRecap  extends ErrorCatcherCommand {
         this.name = "playersRecap";
         this.aliases = new String[]{"recapPlayers", "players","joueurs"};
         this.help = "Affichage des joueurs en jeu et de leur situation.";
-        this.category = MyCommandCategory.GAME_ACTION;
+        this.category = MyCommandCategory.GAME_INFO;
     }
 
     @Override

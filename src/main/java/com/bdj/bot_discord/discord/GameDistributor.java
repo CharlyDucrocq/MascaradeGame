@@ -117,7 +117,7 @@ public class GameDistributor<G extends Game> {
     }
 
     public boolean isInLobby(User user) {
-        Lobby<G> lobby = getLobby(user);
+        Lobby<G> lobby = userGame.get(user);
         return lobby != null;
     }
 }

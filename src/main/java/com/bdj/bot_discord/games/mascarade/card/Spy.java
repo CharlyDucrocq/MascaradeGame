@@ -8,13 +8,15 @@ import com.bdj.bot_discord.utils.choice.ArraysChoice;
 import com.bdj.bot_discord.utils.choice.QuestionAnswers;
 import com.bdj.bot_discord.utils.choice.YesOrNoQuestion;
 
+import java.util.List;
+
 public class Spy extends CardWithInteraction {
-    private final Player[] players;
+    private final List<Player> players;
     private Player target;
 
     public Spy(Player player, TableRound table, MascaradeOut out) {
         super(Character.SPY, player, out);
-        players = table.getPlayers();
+        players = table.getPlayersWithout(player);
     }
 
     @Override

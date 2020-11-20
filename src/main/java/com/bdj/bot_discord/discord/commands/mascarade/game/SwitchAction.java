@@ -21,7 +21,7 @@ public class SwitchAction extends ErrorCatcherCommand {
         this.aliases = new String[]{"switchCard", "switchAction","echange"};
         this.arguments = "[target]";
         this.help = "Echange mon personnage (ou non) avec [target].";
-        this.category = MyCommandCategory.GAME_ACTION;
+        this.category = MyCommandCategory.GAME_INFO;
     }
 
     @Override

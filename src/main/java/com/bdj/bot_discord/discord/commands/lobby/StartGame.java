@@ -3,6 +3,7 @@ package com.bdj.bot_discord.discord.commands.lobby;
 import com.bdj.bot_discord.discord.GameDistributor;
 import com.bdj.bot_discord.discord.User;
 import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
+import com.bdj.bot_discord.discord.commands.MyCommandCategory;
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
 import com.bdj.bot_discord.errors.BadUser;
 import com.bdj.bot_discord.errors.NoGameCreated;
@@ -24,9 +25,11 @@ public class StartGame<G extends Game> extends ErrorCatcherCommand {
     public StartGame(GameDistributor<G> lobbies, Class<? extends GameFactory<G>> factoryClass){
         this.factoryClass = factoryClass;
         this.lobbies = lobbies;
+
         this.name = "start";
+        this.category = MyCommandCategory.GAME_GESTION;
         this.aliases = new String[]{"startGame","gameStart"};
-        this.help = "Création d'une nouvelle partie.";
+        this.help = "Début de la partie.";
     }
     @Override
     protected void executeAux(CommandEvent event) {

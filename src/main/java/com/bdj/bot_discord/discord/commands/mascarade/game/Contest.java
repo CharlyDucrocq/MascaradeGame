@@ -18,7 +18,7 @@ public class Contest extends ErrorCatcherCommand {
         this.name = "contest";
         this.aliases = new String[]{"contester", "objection"};
         this.help = "Conteste le pouvoir choisis par celui dont c'est le tour (avant utilisation).";
-        this.category = MyCommandCategory.GAME_ACTION;
+        this.category = MyCommandCategory.GAME_INFO;
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MascaradeGame implements Game {
+    private final List<Character> characters;
     public int nbStartingTurn; // during only switch available
 
     private TableRound tableRound;
@@ -18,8 +19,9 @@ public class MascaradeGame implements Game {
 
     private Bank bank = new Bank();
 
-    public MascaradeGame(Player[] players){
+    public MascaradeGame(Player[] players, List<Character> characters){
         tableRound = new TableRound(players);
+        this.characters = characters;
         nbStartingTurn = players.length;
     }
 
@@ -80,9 +82,7 @@ public class MascaradeGame implements Game {
     }
 
     public List<Character> getCharactersList() {
-        List<Character> result = new LinkedList<>();
-        for (Player player : tableRound.getPlayers()) if(!result.contains(player.getCurrentCharacter())) result.add(player.getCurrentCharacter());
-        return result;
+        return characters;
     }
 
     public Bank getBank() {

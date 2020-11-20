@@ -4,13 +4,15 @@ import com.bdj.bot_discord.games.mascarade.*;
 import com.bdj.bot_discord.utils.choice.ArraysChoice;
 import com.bdj.bot_discord.utils.choice.QuestionAnswers;
 
+import java.util.List;
+
 public class Witch extends CardWithInteraction {
-    private final Player[] players;
+    private final List<Player> players;
     private Player target;
 
     public Witch(Player player, TableRound table, MascaradeOut out) {
         super(Character.WITCH, player, out);
-        players = table.getPlayers();
+        players = table.getPlayersWithout(player);
     }
 
     @Override

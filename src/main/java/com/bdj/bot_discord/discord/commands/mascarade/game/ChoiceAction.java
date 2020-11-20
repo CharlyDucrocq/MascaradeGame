@@ -17,7 +17,7 @@ public class ChoiceAction extends ErrorCatcherCommand {
         this.aliases = new String[]{"choiceAction", "choix", "choisir"};
         this.arguments = "[character]";
         this.help = "Choisis le personnage [character] pour utiliser son pouvoir.";
-        this.category = MyCommandCategory.GAME_ACTION;
+        this.category = MyCommandCategory.GAME_INFO;
     }
 
     @Override

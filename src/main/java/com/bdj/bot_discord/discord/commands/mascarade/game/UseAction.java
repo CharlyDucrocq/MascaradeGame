@@ -15,7 +15,7 @@ public class UseAction extends ErrorCatcherCommand {
         this.name = "use";
         this.aliases = new String[]{"useAction", "utiliser", "pouvoir"};
         this.help = "Utilise le pouvoir de ton personnage (choisi préalablement).";
-        this.category = MyCommandCategory.GAME_ACTION;
+        this.category = MyCommandCategory.GAME_INFO;
     }
 
     @Override

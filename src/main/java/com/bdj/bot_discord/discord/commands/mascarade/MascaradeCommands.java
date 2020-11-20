@@ -1,12 +1,10 @@
 package com.bdj.bot_discord.discord.commands.mascarade;
 
+import com.bdj.bot_discord.discord.MyEmote;
 import com.bdj.bot_discord.discord.commands.TestCommand;
+import com.bdj.bot_discord.discord.commands.lobby.*;
 import com.bdj.bot_discord.discord.commands.mascarade.info.CharacterRecap;
 import com.bdj.bot_discord.discord.commands.mascarade.info.PlayerRecap;
-import com.bdj.bot_discord.discord.commands.lobby.LobbyCreation;
-import com.bdj.bot_discord.discord.commands.lobby.LobbyInfo;
-import com.bdj.bot_discord.discord.commands.lobby.LobbyJoin;
-import com.bdj.bot_discord.discord.commands.lobby.StartGame;
 import com.bdj.bot_discord.games.mascarade.MascaradeFactory;
 import com.bdj.bot_discord.main.Application;
 import com.jagrosh.jdautilities.command.Command;
@@ -24,7 +22,7 @@ public class MascaradeCommands extends CommandClientBuilder {
         String prefix = "m!";
         this.setPrefix(prefix);
         this.setHelpWord("help");
-        this.setActivity(Activity.playing("Mascarade"));
+        this.setActivity(Activity.playing(MyEmote.DICE.getId()));
 
         Command[] commands = new Command[]{
                 new LobbyCreation<>(Application.mascaradeLobbies),
@@ -36,6 +34,7 @@ public class MascaradeCommands extends CommandClientBuilder {
 //                new ChoiceAction(),
 //                new UseAction(),
 //                new Contest(),
+                new RulesGetter("http://jeuxstrategie1.free.fr/jeu_mascarade/regle.pdf"),
                 new PlayerRecap(),
                 new CharacterRecap(),
                 new TestCommand()

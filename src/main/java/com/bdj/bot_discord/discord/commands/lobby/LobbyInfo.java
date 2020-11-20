@@ -4,6 +4,7 @@ import com.bdj.bot_discord.discord.ColorTheme;
 import com.bdj.bot_discord.discord.GameDistributor;
 import com.bdj.bot_discord.discord.User;
 import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
+import com.bdj.bot_discord.discord.commands.MyCommandCategory;
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
 import com.bdj.bot_discord.errors.GameException;
 import com.bdj.bot_discord.games.mascarade.MascaradeGame;
@@ -22,6 +23,7 @@ public class LobbyInfo<G extends Game> extends ErrorCatcherCommand {
         this.lobbies = lobbies;
 
         this.name = "lobby";
+        this.category = MyCommandCategory.GAME_GESTION;
         this.aliases = new String[]{"lobbyInfo","infoLobby","listPlayer"};
         this.help = "Information sur le lobby courant.";
         this.ownerCommand = true;

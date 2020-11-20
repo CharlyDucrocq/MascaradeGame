@@ -36,6 +36,10 @@ public class QuestionSender {
     private MessageEmbed getMsgEmbed(){
         EmbedBuilder bd = new EmbedBuilder();
 
+        if(target!=null){
+            bd.setAuthor(target.getName(),null,target.getAvatarUrl());
+        }
+
         bd.setTitle(question.getQuestion());
         bd.setDescription("Cliquez sur la reaction associé à votre choix.------------------------------------------------------------->");
         if(color != null) bd.setColor(color);
