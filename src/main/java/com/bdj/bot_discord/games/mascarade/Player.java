@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.games.mascarade;
 
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.games.mascarade.card.Character;
 import com.bdj.bot_discord.games.mascarade.card.Cheater;
 import com.bdj.bot_discord.utils.choice.QuestionAnswers;

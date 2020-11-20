@@ -1,7 +1,7 @@
 package com.bdj.bot_discord.discord.lobby;
 
-import com.bdj.bot_discord.discord.InOutDiscord;
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.InOutDiscord;
+import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.lobby.Game;
 import com.bdj.bot_discord.lobby.GameFactory;
 import com.bdj.bot_discord.lobby.Lobby;

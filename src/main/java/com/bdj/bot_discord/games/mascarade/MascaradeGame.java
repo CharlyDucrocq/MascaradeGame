@@ -1,10 +1,9 @@
 package com.bdj.bot_discord.games.mascarade;
 
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.lobby.Game;
 import com.bdj.bot_discord.games.mascarade.card.Character;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class MascaradeGame implements Game {

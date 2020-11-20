@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.games.times_bomb;
 
-import com.bdj.bot_discord.discord.QuestionSender;
+import com.bdj.bot_discord.discord.utils.QuestionSender;
 import com.bdj.bot_discord.utils.choice.ArraysChoice;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;

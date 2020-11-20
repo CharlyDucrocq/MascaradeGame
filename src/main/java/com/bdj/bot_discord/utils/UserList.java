@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.utils;
 
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;

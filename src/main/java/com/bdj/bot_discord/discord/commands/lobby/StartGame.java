@@ -1,22 +1,17 @@
 package com.bdj.bot_discord.discord.commands.lobby;
 
-import com.bdj.bot_discord.discord.GameDistributor;
-import com.bdj.bot_discord.discord.User;
-import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
+import com.bdj.bot_discord.discord.utils.GameDistributor;
+import com.bdj.bot_discord.discord.utils.User;
+import com.bdj.bot_discord.discord.utils.ErrorCatcherCommand;
 import com.bdj.bot_discord.discord.commands.MyCommandCategory;
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
 import com.bdj.bot_discord.errors.BadUser;
 import com.bdj.bot_discord.errors.NoGameCreated;
-import com.bdj.bot_discord.games.mascarade.MascaradeFactory;
-import com.bdj.bot_discord.games.mascarade.MascaradeGame;
 import com.bdj.bot_discord.lobby.Game;
 import com.bdj.bot_discord.lobby.GameFactory;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import java.lang.reflect.InvocationTargetException;
-
 import static com.bdj.bot_discord.main.Application.getUser;
-import static com.bdj.bot_discord.main.Application.mascaradeLobbies;
 
 public class StartGame<G extends Game> extends ErrorCatcherCommand {
     private final GameDistributor<G> lobbies;

@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.games.mascarade;
 
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.errors.ActionNotAllowed;
 import com.bdj.bot_discord.errors.GameException;
 import com.bdj.bot_discord.games.mascarade.card.Card;

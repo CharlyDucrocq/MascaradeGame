@@ -1,7 +1,7 @@
 package com.bdj.bot_discord.discord.commands.mascarade.info;
 
-import com.bdj.bot_discord.discord.User;
-import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
+import com.bdj.bot_discord.discord.utils.User;
+import com.bdj.bot_discord.discord.utils.ErrorCatcherCommand;
 import com.bdj.bot_discord.discord.commands.MyCommandCategory;
 import com.bdj.bot_discord.games.mascarade.MascaradeGame;
 import com.jagrosh.jdautilities.command.CommandEvent;
@@ -15,6 +15,7 @@ public class PlayerRecap  extends ErrorCatcherCommand {
         this.aliases = new String[]{"recapPlayers", "players","joueurs"};
         this.help = "Affichage des joueurs en jeu et de leur situation.";
         this.category = MyCommandCategory.GAME_INFO;
+        this.guildOnly=false;
     }
 
     @Override

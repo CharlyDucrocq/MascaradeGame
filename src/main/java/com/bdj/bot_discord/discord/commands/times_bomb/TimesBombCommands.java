@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.discord.commands.times_bomb;
 
-import com.bdj.bot_discord.discord.MyEmote;
+import com.bdj.bot_discord.discord.utils.MyEmote;
 import com.bdj.bot_discord.discord.commands.lobby.*;
 import com.bdj.bot_discord.games.times_bomb.TimesBombFactory;
 import com.bdj.bot_discord.main.Application;

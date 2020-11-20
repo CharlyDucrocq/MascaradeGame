@@ -1,13 +1,11 @@
 package com.bdj.bot_discord.discord.commands.lobby;
 
-import com.bdj.bot_discord.discord.ColorTheme;
-import com.bdj.bot_discord.discord.GameDistributor;
-import com.bdj.bot_discord.discord.User;
-import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
+import com.bdj.bot_discord.discord.utils.ColorTheme;
+import com.bdj.bot_discord.discord.utils.GameDistributor;
+import com.bdj.bot_discord.discord.utils.User;
+import com.bdj.bot_discord.discord.utils.ErrorCatcherCommand;
 import com.bdj.bot_discord.discord.commands.MyCommandCategory;
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
-import com.bdj.bot_discord.errors.GameException;
-import com.bdj.bot_discord.games.mascarade.MascaradeGame;
 import com.bdj.bot_discord.lobby.Game;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;

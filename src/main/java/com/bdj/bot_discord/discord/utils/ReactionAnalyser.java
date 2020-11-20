@@ -1,4 +1,4 @@
-package com.bdj.bot_discord.discord;
+package com.bdj.bot_discord.discord.utils;
 
 import com.bdj.bot_discord.main.Application;
 import net.dv8tion.jda.api.entities.Message;

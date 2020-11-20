@@ -1,7 +1,7 @@
 package com.bdj.bot_discord.games.mascarade;
 
-import com.bdj.bot_discord.discord.InOutDiscord;
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.InOutDiscord;
+import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
 import com.bdj.bot_discord.lobby.Lobby;
 import com.bdj.bot_discord.games.mascarade.card.Card;

@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.games.code_name;
 
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.lobby.Game;
 
 import java.util.List;

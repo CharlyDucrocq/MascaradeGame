@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.discord.commands.mascarade;
 
-import com.bdj.bot_discord.discord.MyEmote;
+import com.bdj.bot_discord.discord.utils.MyEmote;
 import com.bdj.bot_discord.discord.commands.TestCommand;
 import com.bdj.bot_discord.discord.commands.lobby.*;
 import com.bdj.bot_discord.discord.commands.mascarade.info.CharacterRecap;

@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.discord.commands.lobby;
 
-import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
+import com.bdj.bot_discord.discord.utils.ErrorCatcherCommand;
 import com.bdj.bot_discord.discord.commands.MyCommandCategory;
 import com.jagrosh.jdautilities.command.CommandEvent;
 

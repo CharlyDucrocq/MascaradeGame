@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.games.times_bomb;
 
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.lobby.Game;
 
 import java.util.Arrays;

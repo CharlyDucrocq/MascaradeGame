@@ -1,7 +1,7 @@
 package com.bdj.bot_discord.main;
 
-import com.bdj.bot_discord.discord.GameDistributor;
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.GameDistributor;
+import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.discord.commands.mascarade.MascaradeCommands;
 import com.bdj.bot_discord.discord.commands.times_bomb.TimesBombCommands;
 import com.bdj.bot_discord.errors.InvalidCommand;
@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.bdj.bot_discord.utils.UserList;
 
-//import com.bdj.bot_discord.discord.InOutDiscord;
+//import com.bdj.bot_discord.discord.utils.InOutDiscord;
 //import com.bdj.bot_discord.discord.commands.Command;
 //import com.bdj.bot_discord.errors.GameException;
 //import net.dv8tion.jda.api.events.message.MessageReceivedEvent;

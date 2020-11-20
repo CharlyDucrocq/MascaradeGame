@@ -1,6 +1,5 @@
-package com.bdj.bot_discord.discord.commands;
+package com.bdj.bot_discord.discord.utils;
 
-import com.bdj.bot_discord.discord.InOutDiscord;
 import com.bdj.bot_discord.errors.GameException;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;

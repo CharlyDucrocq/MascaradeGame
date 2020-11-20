@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.lobby;
 
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.User;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 import java.util.Collection;

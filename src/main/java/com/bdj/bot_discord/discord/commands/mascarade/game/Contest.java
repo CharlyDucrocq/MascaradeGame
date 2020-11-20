@@ -1,7 +1,7 @@
 package com.bdj.bot_discord.discord.commands.mascarade.game;
 
-import com.bdj.bot_discord.discord.User;
-import com.bdj.bot_discord.discord.commands.ErrorCatcherCommand;
+import com.bdj.bot_discord.discord.utils.User;
+import com.bdj.bot_discord.discord.utils.ErrorCatcherCommand;
 import com.bdj.bot_discord.discord.commands.MyCommandCategory;
 import com.bdj.bot_discord.errors.BadUser;
 import com.bdj.bot_discord.errors.NotInTheGame;

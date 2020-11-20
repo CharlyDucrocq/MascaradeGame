@@ -1,6 +1,6 @@
 package com.bdj.bot_discord.games.code_name;
 
-import com.bdj.bot_discord.discord.MyEmote;
+import com.bdj.bot_discord.discord.utils.MyEmote;
 import com.bdj.bot_discord.errors.GameException;
 
 import java.awt.*;

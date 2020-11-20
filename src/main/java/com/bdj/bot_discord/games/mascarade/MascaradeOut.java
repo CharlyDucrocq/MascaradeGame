@@ -1,7 +1,6 @@
 package com.bdj.bot_discord.games.mascarade;
 
-import com.bdj.bot_discord.discord.*;
-import com.bdj.bot_discord.discord.commands.mascarade.game.UseAction;
+import com.bdj.bot_discord.discord.utils.*;
 import com.bdj.bot_discord.games.mascarade.card.Card;
 import com.bdj.bot_discord.games.mascarade.card.Character;
 import com.bdj.bot_discord.games.mascarade.card.Inquisitor;

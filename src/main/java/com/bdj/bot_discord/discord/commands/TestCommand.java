@@ -1,18 +1,12 @@
 package com.bdj.bot_discord.discord.commands;
 
-import com.bdj.bot_discord.discord.User;
+import com.bdj.bot_discord.discord.utils.ErrorCatcherCommand;
+import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.games.mascarade.MascaradeFactory;
 import com.bdj.bot_discord.games.mascarade.Player;
-import com.bdj.bot_discord.games.times_bomb.TimesBombFactory;
 import com.bdj.bot_discord.games.mascarade.MascaradeGame;
-import com.bdj.bot_discord.games.mascarade.MascaradeOut;
-import com.bdj.bot_discord.lobby.Game;
 import com.bdj.bot_discord.main.Application;
 import com.jagrosh.jdautilities.command.CommandEvent;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
 
 public class TestCommand extends ErrorCatcherCommand {
 
