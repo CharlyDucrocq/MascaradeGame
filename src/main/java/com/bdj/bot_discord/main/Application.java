@@ -50,6 +50,10 @@ public class Application extends ListenerAdapter {
         return userList.getUser(new User(event.getAuthor()));
     }
 
+    public static User getUser(net.dv8tion.jda.api.entities.User user) {
+        return userList.getUser(new User(user));
+    }
+
     public static String extractFirstParameter(String msg) {
         String[] tab1 = msg.split("[!][A-Za-z]+");
         if(tab1.length!=2) throw new InvalidCommand();

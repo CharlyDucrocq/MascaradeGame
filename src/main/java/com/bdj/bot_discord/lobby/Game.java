@@ -6,4 +6,5 @@ public interface Game {
     void start();
     public User[] getUsers();
     public boolean isOver();
+    void kill();
 }

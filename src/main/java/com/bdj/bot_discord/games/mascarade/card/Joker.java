@@ -10,45 +10,31 @@ import com.bdj.bot_discord.utils.choice.YesOrNoQuestion;
 
 import java.util.List;
 
-public class Joker extends CardWithInteraction {
+public class Joker extends Card {
     private final List<Player> players;
+    private final MascaradeOut out;
     private Player target1;
     private Player target2;
 
     public Joker(Player player, TableRound table, MascaradeOut out) {
-        super(Character.JOKER, player, out);
+        super(Character.JOKER, player);
+        this.out = out;
         players = table.getPlayersWithout(player);
     }
 
     @Override
-    protected QuestionAnswers actionBetweenLock() {
-        return new ArraysChoice<>(
-                "Quelle sera votre 1er victime ?",
-                players,
-                (choice1)->{
-                    this.target1 = choice1;
-                    player.ask(new ArraysChoice<>(
-                            "Avec qui voulez vous échanger la carte de "+choice1.toString()+" ?",
-                            players,
-                            choice2 -> {
-                                this.target2 = choice2;
-                                player.ask(new YesOrNoQuestion(
-                                        "Voulez vous échanger les cartes ?",
-                                        () -> {
-                                            Character c = target1.getCurrentCharacter();
-                                            target1.setCurrentCharacter(target2.getCurrentCharacter());
-                                            target2.setCurrentCharacter(c);
-                                            player.getUser().sendMessage("Vous avez échanger les cartes de "+target1.toString()+" et "+target2.toString()+".");
-                                            lock.unlock();
-                                        },
-                                        () -> {
-                                            player.getUser().sendMessage("Vous n'avez pas échanger les cartes de "+target1.toString()+" et "+target2.toString()+".");
-                                            lock.unlock();
-                                        }
-                                ));
-                            }
-                    ));
-                });
+    public void action() {
+        this.target1 = out.askForAPlayer(player, players, "Quelle sera votre 1er victime ?", true);
+        this.target2 = out.askForAPlayer(player, players, "Avec qui voulez vous échanger la carte de "+target1.toString()+" ?", true);
+        boolean really = out.askForABoolean(player, "Voulez vous échanger les cartes ?", true);
+        if(really){
+            Character c = target1.getCurrentCharacter();
+            target1.setCurrentCharacter(target2.getCurrentCharacter());
+            target2.setCurrentCharacter(c);
+            player.getUser().sendMessage("Vous avez échanger les cartes de "+target1.toString()+" et "+target2.toString()+".");
+        }else {
+            player.getUser().sendMessage("Vous n'avez pas échanger les cartes de "+target1.toString()+" et "+target2.toString()+".");
+        }
     }
 
     public static Card create(Player player, MascaradeGame game){

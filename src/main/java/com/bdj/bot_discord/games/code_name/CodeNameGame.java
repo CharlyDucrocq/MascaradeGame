@@ -49,4 +49,9 @@ public class CodeNameGame implements Game {
     public boolean isOver() {
         return over;
     }
+
+    @Override
+    public void kill() {
+        //TODO
+    }
 }

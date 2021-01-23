@@ -4,14 +4,17 @@ import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.errors.GameFullException;
 import com.bdj.bot_discord.errors.NotEnoughPlayers;
 import com.bdj.bot_discord.games.mascarade.GlobalParameter;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public abstract class Lobby<G extends Game> {
+    private static int MAX_ID= 1;
+    private final int ID = MAX_ID++;
+
     int maxPlayer;
     List<User> users = new LinkedList<>();
-    User admin;
+    Set<User> admins = new HashSet<>();
     G game;
 
     public Lobby(int max){
@@ -19,7 +22,7 @@ public abstract class Lobby<G extends Game> {
     }
 
     public void addPlayer(User user){
-        if(users.size()== GlobalParameter.MAX_PLAYERS) throw new GameFullException();
+        if(users.size()== maxPlayer) throw new GameFullException(maxPlayer);
         users.add(user);
     }
 
@@ -31,14 +34,14 @@ public abstract class Lobby<G extends Game> {
         return users.contains(user);
     }
 
-    public void setAdmin(User user){
-        admin = user;
+    public void addAdmin(User user){
+        admins.add(user);
     }
 
     public G createGame(GameFactory<? extends G> factory){
         factory.setPlayers(users);
         setInOut(factory);
-        if(!factory.haveEnoughPlayer()) throw new NotEnoughPlayers();
+        if(!factory.haveEnoughPlayer()) throw new NotEnoughPlayers(factory.getMinPlayer());
         game =factory.createGame();
         return game;
     }
@@ -46,15 +49,15 @@ public abstract class Lobby<G extends Game> {
     protected abstract void setInOut(GameFactory<? extends G> factory);
 
     public boolean isAdmin(User user) {
-        return user.equals(admin);
+        return admins.contains(user);
     }
 
     public List<User> getUsers() {
         return users;
     }
 
-    public User getAdmin() {
-        return admin;
+    public Collection<User> getAdmins() {
+        return admins;
     }
 
     public boolean gameOver() {
@@ -67,5 +70,28 @@ public abstract class Lobby<G extends Game> {
 
     public boolean isPlayer(User user) {
         return users.contains(user);
+    }
+
+    public void killGame(){
+        if(game!=null) game.kill();
+        this.game=null;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Lobby)) return false;
+        Lobby<?> lobby = (Lobby<?>) o;
+        return ID == lobby.ID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ID);
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(ID);
     }
 }

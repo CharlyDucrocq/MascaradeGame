@@ -7,6 +7,8 @@ import com.bdj.bot_discord.games.mascarade.card.Character;
 import java.util.List;
 
 public class MascaradeGame implements Game {
+    private Thread gameThread;
+
     private final List<Character> characters;
     public int nbStartingTurn; // during only switch available
 
@@ -30,7 +32,13 @@ public class MascaradeGame implements Game {
 
     public void start() {
         out.printStart(this);
-        nextRound();
+        this.gameThread = new Thread(this::nextRound){{start();}};
+    }
+
+    @Override
+    public void kill() {
+        this.gameThread.stop(); //TODO : find another way
+        this.ended = true;
     }
 
     void nextRound(){
@@ -42,6 +50,8 @@ public class MascaradeGame implements Game {
             round = new StartingRound(this, tableRound.next());
         else
             round = new GameRound(this, tableRound.next());
+        round.start();
+        nextRound();
     }
 
     private void endGame() {
@@ -56,12 +66,6 @@ public class MascaradeGame implements Game {
             if (player.endTheGame()) return true;
         }
         return false;
-    }
-
-    public void update(Object o) {
-        if(o == round){
-            if(round.isEnded()) nextRound();
-        }
     }
 
     public GameRound getRound() {

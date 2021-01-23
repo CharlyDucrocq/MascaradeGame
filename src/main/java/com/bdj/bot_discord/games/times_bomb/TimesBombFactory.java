@@ -72,4 +72,9 @@ public class TimesBombFactory implements GameFactory<TimesBombGame> {
         game.setOut(out);
         return game;
     }
+
+    @Override
+    public int getMinPlayer() {
+        return MIN_PLAYER;
+    }
 }

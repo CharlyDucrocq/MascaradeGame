@@ -6,5 +6,5 @@ import static com.bdj.bot_discord.main.Application.*;
 public class MyCommandCategory {
     public static Command.Category GAME_GESTION = new Command.Category("Gestion de la partie");
     public static Command.Category GAME_INFO = new Command.Category("Info jeu", (e) -> mascaradeLobbies.isInLobby(getUser(e)));
-    public static Command.Category GAME_RULES = new Command.Category("Regles du jeu");
+    public static Command.Category GAME_RULES = new Command.Category("Règles du jeu");
 }

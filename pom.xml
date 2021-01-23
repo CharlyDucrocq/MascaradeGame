@@ -7,6 +7,7 @@
     <groupId>com.bdj.bot_discord</groupId>
     <artifactId>mascarade_bot</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- CHANGE ME IF NEEDED, other : ISO-8859-1 -->
@@ -33,7 +34,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.bdj.bot_discord.mascarade_bot.Main</mainClass>
+                            <mainClass>com.bdj.bot_discord.main.AppAndKillWindow</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -3,10 +3,13 @@ package com.bdj.bot_discord.games.times_bomb;
 import com.bdj.bot_discord.discord.utils.QuestionSender;
 import com.bdj.bot_discord.utils.choice.ArraysChoice;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -44,7 +47,7 @@ public class TimesBombOut {
         for (Player player : players){
             bd = new EmbedBuilder();
             bd.setTitle("Annonce des rôles :");
-            bd.setDescription("Vous faite partie des "+player.getTeam());
+            bd.setDescription("Vous faites partie des "+player.getTeam());
             bd.setThumbnail(player.getTeam().getIconUrl());
             player.getUser().getDiscordUser().openPrivateChannel().complete().sendMessage(bd.build()).queue();
         }
@@ -67,9 +70,9 @@ public class TimesBombOut {
 
     private MessageEmbed getHandEmbed(Player player){
         EmbedBuilder bd = new EmbedBuilder();
-        bd.setTitle("Vos carte :");
-        bd.addField("Nombre de Cartes neutre :", String.valueOf(player.getNbCardByType(Card.FAKE)),true);
-        bd.addField("Nombre de Cartes cable :", String.valueOf(player.getNbCardByType(Card.CABLE)),true);
+        bd.setTitle("Vos cartes :");
+        bd.addField("Nombre de Cartes neutres :", String.valueOf(player.getNbCardByType(Card.FAKE)),true);
+        bd.addField("Nombre de Cartes câble :", String.valueOf(player.getNbCardByType(Card.CABLE)),true);
         bd.addField("Nombre de Cartes bombe :", String.valueOf(player.getNbCardByType(Card.BOMB)),true);
         return bd.build();
     }
@@ -86,14 +89,14 @@ public class TimesBombOut {
         bd.setColor(ColorTheme.START_TURN.color);
         bd.setTitle("Au tour de "+currentPlayer.getName());
         bd.setThumbnail(currentPlayer.getUser().getDiscordUser().getAvatarUrl());
-        bd.addField("Nombre de cables restant", String.valueOf(game.nbCableLeft()),true);
-        bd.addField("Carte à coupé avant de redistribuer", String.valueOf(game.cutLeftBeforeNewRound()),true);
+        bd.addField("Nombre de câbles restant", String.valueOf(game.nbCableLeft()),true);
+        bd.addField("Carte à couper avant de redistribuer", String.valueOf(game.cutLeftBeforeNewRound()),true);
         channel.sendMessage(bd.build()).queue();
     }
 
     public void askForTarget(TimesBombGame game) {
         QuestionSender sender = new QuestionSender(new ArraysChoice<Player>(
-                game.getCurrentPlayer().getName()+" : Chez qui souhaite-tu couper une carte ?",
+                game.getCurrentPlayer().getName()+" : Chez qui souhaitez-vous couper une carte ?",
                 game.getCuteablePlayer(),
                 target -> {
                     game.cutCard(target, random.nextInt(target.nbCardLeft()));
@@ -123,12 +126,55 @@ public class TimesBombOut {
 
         EmbedBuilder bd = new EmbedBuilder();
         bd.setTitle("VICTOIRE DES "+winner.name().toUpperCase());
-        if(winner == Team.MORIARTY ) bd.setDescription("La bombe a explosé");
-        else bd.setDescription("La bombe a été désamorcé");
+        if(winner == Team.MORIARTY ) bd.setDescription("La bombe a explosée");
+        else bd.setDescription("La bombe a été désamorcée");
         bd.setColor(winner.getColor());
         bd.setThumbnail(winner.getIconUrl());
 
         for (Player player : game.getPlayersByTeam(winner)) bd.addField("",player.getUser().toString(), false);
         channel.sendMessage(bd.build()).queue();
+    }
+
+    private MessageChannel saveChannel = new MessageChannel() {
+        @Override
+        public long getLatestMessageIdLong() {
+            return 0;
+        }
+
+        @Override
+        public boolean hasLatestMessage() {
+            return false;
+        }
+
+        @Nonnull
+        @Override
+        public String getName() {
+            return null;
+        }
+
+        @Nonnull
+        @Override
+        public ChannelType getType() {
+            return null;
+        }
+
+        @Nonnull
+        @Override
+        public JDA getJDA() {
+            return null;
+        }
+
+        @Override
+        public long getIdLong() {
+            return 0;
+        }
+    };
+    void mute(){
+        MessageChannel c = this.saveChannel;
+        this.saveChannel=this.channel;
+        this.channel=c;
+    }
+    void printKill(){
+        this.channel.sendMessage("game killed").queue();
     }
 }

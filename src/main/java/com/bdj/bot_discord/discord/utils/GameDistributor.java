@@ -9,11 +9,12 @@ import com.bdj.bot_discord.errors.NoLobbyFound;
 import com.bdj.bot_discord.lobby.Lobby;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class GameDistributor<G extends Game> {
     private int maxByLobby;
+    private Map<User, Set<DiscordLobby<G>>> adminGame = new HashMap<>();
     private Map<User, DiscordLobby<G>> userGame = new HashMap<>();
     private Map<MessageChannel, DiscordLobby<G>> channelGame = new HashMap<>();
 
@@ -22,22 +23,12 @@ public class GameDistributor<G extends Game> {
     }
 
     public DiscordLobby<G> newLobby(User admin, MessageChannel channel){
-        DiscordLobby<G> prev = userGame.get(admin);
-        if(prev != null){
-            if(prev.gameOver()){
-                if(prev.isAdmin(admin))
-                    deleteLobby(prev);
-                else
-                    quit(admin);
-            } else {
-                throw new GameNotFinished();
-            }
-        }
         if(channelOccupied(channel))
             throw new GameException("Ce channel est déjà occupé");
         DiscordLobby<G> newOne = new DiscordLobby<>(maxByLobby);
-        userGame.put(admin,newOne);
-        newOne.setAdmin(admin);
+        adminGame.putIfAbsent(admin, new HashSet<>());
+        adminGame.get(admin).add(newOne);
+        newOne.addAdmin(admin);
         associate(channel,newOne);
         newOne.getInOut().printGlobalMsg("Partie créée. Admin : "+admin.toString());
         return newOne;
@@ -76,9 +67,9 @@ public class GameDistributor<G extends Game> {
         lobby.removePlayer(user);
     }
 
-    private void deleteLobby(DiscordLobby<G> toDelete) {
+    public void deleteLobby(DiscordLobby<G> toDelete) {
         for (User user : toDelete.getUsers()) userGame.remove(user);
-        userGame.remove(toDelete.getAdmin());
+        toDelete.getAdmins().forEach(adminGame::remove);
         channelGame.remove(toDelete.getInOut().getGlobalChannel());
         toDelete.getInOut().printGlobalMsg("La partie à bien été supprimé");
     }
@@ -119,5 +110,16 @@ public class GameDistributor<G extends Game> {
     public boolean isInLobby(User user) {
         Lobby<G> lobby = userGame.get(user);
         return lobby != null;
+    }
+
+    public Collection<DiscordLobby<G>> getAll() {
+        return adminGame.values().stream().flatMap(Set::stream).collect(Collectors.toSet());
+    }
+
+    public void registerAdmins(DiscordLobby<G> lobby){
+        lobby.getAdmins().forEach(a->{
+            adminGame.putIfAbsent(a,new HashSet<>());
+            adminGame.get(a).add(lobby);
+        });
     }
 }

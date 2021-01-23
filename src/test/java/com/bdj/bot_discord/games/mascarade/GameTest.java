@@ -33,7 +33,7 @@ public class GameTest {
         users = new User[NB_PLAYERS];
         for(int i=0;i<NB_PLAYERS;i++){
             users[i] = mock(User.class);
-            if(i==0) lobby.setAdmin(users[i]);
+            if(i==0) lobby.addAdmin(users[i]);
             lobby.addPlayer(users[i]);
         }
         game = lobby.createGame(new MascaradeFactory());

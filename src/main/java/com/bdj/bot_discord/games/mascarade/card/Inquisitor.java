@@ -1,41 +1,38 @@
 package com.bdj.bot_discord.games.mascarade.card;
 
 import com.bdj.bot_discord.games.mascarade.MascaradeGame;
+import com.bdj.bot_discord.games.mascarade.MascaradeOut;
 import com.bdj.bot_discord.games.mascarade.Player;
 import com.bdj.bot_discord.utils.choice.QuestionAnswers;
 
 import java.util.List;
 
-public class Inquisitor  extends CardWithInteraction {
+public class Inquisitor  extends Card {
     public final static int TAX_COIN = 4;
 
     public final List<Player> players;
     public final List<Character> characters;
+    private final MascaradeOut out;
 
     public Player target;
     private Character charAnnounced;
     int gift = 0;
 
     public Inquisitor(Player player, MascaradeGame game) {
-        super(Character.INQUISITOR, player, game.getOut());
+        super(Character.INQUISITOR, player);
+        this.out =game.getOut();
         players = game.getTable().getPlayersWithout(player);
         characters = game.getCharactersList();
     }
 
     @Override
-    protected QuestionAnswers actionBetweenLock() {
-        out.inquisitorProceed(player, this);
-        return null;
-    }
-
-    public void processInfo(Player target, Character character) {
-        this.target = target;
-        this.charAnnounced = character;
+    public void action() {
+        this.target = out.askForAPlayer(player, players, "En tant qu'inquisiteur, à qui demandez-vous de deviner sa carte ?", false);
+        this.charAnnounced = out.askForAChar(target, characters, "Quelle est d'après vous votre carte ?", false);
         if (charAnnounced != target.getCurrentCharacter()){
             gift = target.getPurse().removeCoin(TAX_COIN);
             player.getPurse().addCoin(gift);
         }
-        lock.unlock();
     }
 
     @Override

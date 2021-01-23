@@ -32,7 +32,10 @@ public class GameRound {
         this.player = player;
         this.out = game.getOut();
         out.printStartTurn(this);
-        out.askToChooseAction(this);
+    }
+
+    void start(){
+        out.askToChooseAction(this).doAction(this);
     }
 
     public RoundAction[] getActionsAvailable() {
@@ -63,7 +66,9 @@ public class GameRound {
     }
 
     public void askForSwitch(){
-        out.askForSwitch(this);
+        Player target = out.askForAPlayer(player, game.getTable().getPlayersWithout(player), "Avec qui voulez-vous échanger (ou pas) ?", true);
+        boolean really = out.askForABoolean(player,"Voulez-vous réellement échanger les cartes ?", true);
+        switchCard(target, really);
     }
 
     public void switchCard(Player otherPlayer, boolean really){
@@ -77,22 +82,14 @@ public class GameRound {
     }
 
     public void askForUse() {
-        out.askForUse(this);
+        Character character = out.askForAChar(player, game.getCharactersList(), "Quelle personnage affirmez-vous être ?", false);
+        setCharacterToUse(character);
+        out.waitForContest(this);
+        useCharacter();
     }
 
     public void useCharacter(){
-        new Thread(this::useCharacterWithExceptionCatcher).start(); // separated for test
-    }
-
-    private void useCharacterWithExceptionCatcher(){
-        try {
-            useCharacterOnlyForTest(charaChose);
-        } catch (GameException e){
-            out.printError(e);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        if(!isEnded) endTurn();
+        useCharacterOnlyForTest(charaChose);
     }
 
     synchronized void useCharacterOnlyForTest(CardCreator creator){
@@ -137,7 +134,6 @@ public class GameRound {
 
     private void endTurn(){
         isEnded = true;
-        game.update(this);
     }
 
     public boolean isEnded() {

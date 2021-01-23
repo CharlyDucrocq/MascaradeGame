@@ -3,6 +3,7 @@ package com.bdj.bot_discord.discord.commands.times_bomb;
 import com.bdj.bot_discord.discord.utils.MyEmote;
 import com.bdj.bot_discord.discord.commands.lobby.*;
 import com.bdj.bot_discord.games.times_bomb.TimesBombFactory;
+import com.bdj.bot_discord.games.times_bomb.TimesBombGame;
 import com.bdj.bot_discord.main.Application;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
@@ -18,10 +19,13 @@ public class TimesBombCommands extends CommandClientBuilder {
         this.setActivity(Activity.playing(MyEmote.DICE.getId()));
 
         Command[] commands = new Command[]{
-                new LobbyCreation<>(Application.timesBombLobbies),
+                new LobbyCreation<>(TimesBombGame.class, Application.timesBombLobbies,prefix),
                 new LobbyJoin<>(Application.timesBombLobbies),
                 new LobbyInfo<>(Application.timesBombLobbies, "Time's Bomb"),
                 new StartGame<>(Application.timesBombLobbies, TimesBombFactory.class),
+                new KillGame<>(Application.timesBombLobbies),
+                new MasterClean<>(Application.timesBombLobbies),
+                new GiveAdminAccess<>(Application.timesBombLobbies),
                 new RulesGetter("https://www.magicbazar.fr/pdf/rules_games/time_bomb_regles_fr.pdf"),
         };
 

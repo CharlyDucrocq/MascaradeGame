@@ -10,11 +10,12 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import static com.bdj.bot_discord.main.Application.getUser;
 
 public class LobbyJoin<G extends Game> extends ErrorCatcherCommand {
+    public final static String NAME = "join";
     private final GameDistributor<G> lobbies;
 
     public LobbyJoin(GameDistributor<G> lobbies){
         this.lobbies = lobbies;
-        this.name = "join";
+        this.name = NAME;
         this.category = MyCommandCategory.GAME_GESTION;
         this.aliases = new String[]{"joinGame"};
         this.help = "Rejoindre la partie courante.";

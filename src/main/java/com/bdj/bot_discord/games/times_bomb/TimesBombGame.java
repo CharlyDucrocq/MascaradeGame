@@ -29,7 +29,7 @@ public class TimesBombGame implements Game {
     public TimesBombGame(Player[] players, int minBad, int maxBad) {
         this.maxBad = maxBad;
         this.minBad = minBad;
-        int nbBad = maxBad-minBad ==0 ? maxBad : (random.nextInt(maxBad-minBad)+minBad);
+        int nbBad = maxBad-minBad ==0 ? maxBad : (random.nextInt(maxBad-minBad+1)+minBad);
         List<Player> start = new LinkedList<>(Arrays.asList(players));
 
         LinkedList<Player> shorted = new LinkedList<>();
@@ -134,6 +134,13 @@ public class TimesBombGame implements Game {
     @Override
     public boolean isOver() {
         return gameOver;
+    }
+
+    @Override
+    public void kill() {
+        this.out.printKill();
+        this.out.mute();
+        this.gameOver=true;
     }
 
     public Player getCurrentPlayer() {

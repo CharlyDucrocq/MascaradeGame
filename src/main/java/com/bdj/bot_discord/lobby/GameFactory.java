@@ -10,4 +10,6 @@ public interface GameFactory<G extends Game> {
     boolean haveEnoughPlayer();
     G createGame();
     void setDiscordOut(MessageChannel channel);
+
+    int getMinPlayer();
 }

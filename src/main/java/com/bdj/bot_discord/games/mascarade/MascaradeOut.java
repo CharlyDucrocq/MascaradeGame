@@ -5,6 +5,7 @@ import com.bdj.bot_discord.games.mascarade.card.Card;
 import com.bdj.bot_discord.games.mascarade.card.Character;
 import com.bdj.bot_discord.games.mascarade.card.Inquisitor;
 import com.bdj.bot_discord.main.Application;
+import com.bdj.bot_discord.utils.MyFuture;
 import com.bdj.bot_discord.utils.choice.ArraysChoice;
 import com.bdj.bot_discord.utils.choice.YesOrNoQuestion;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -15,6 +16,8 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class MascaradeOut {
     private enum ColorTheme {
@@ -33,6 +36,12 @@ public class MascaradeOut {
     }
 
     private MessageChannel channel;
+
+    private QuestionSender lastQuestion;
+    public void reRunLastQuestion() {
+        if(lastQuestion.isDone()) throw new RuntimeException("Question done");
+        lastQuestion.sendAgain();
+    }
 
     public MascaradeOut(MessageChannel channel){
         this.channel = channel;
@@ -105,39 +114,18 @@ public class MascaradeOut {
         channel.sendMessage(bd.build()).queue();
     }
 
-    public void askToChooseAction(GameRound round) {
+    public RoundAction askToChooseAction(GameRound round) {
+        MyFuture<RoundAction> answer = new MyFuture<>();
         QuestionSender sender = new QuestionSender(new ArraysChoice<>(
                 "Quelle action souhaitez-vous réaliser ?",
                 round.getActionsAvailable(),
-                action -> action.doAction(round)));
+                answer::sendAnswer));
         sender.disableEndMsg();
+        lastQuestion = sender;
         sender.setTarget(round.player.getUser().getDiscordUser());
         sender.setColor(ColorTheme.QUESTION.color);
         sender.send(channel);
-    }
-
-    public void askForSwitch(GameRound round) {
-        MascaradeGame game = round.getGame();
-        net.dv8tion.jda.api.entities.User user = round.player.getUser().getDiscordUser();
-        ArraysChoice<Player> userChoice = new ArraysChoice<>(
-                "Avec qui voulez-vous échanger (ou pas) ?",
-                game.getTable().getPlayersWithout(round.player) ,
-                otherPlayer ->{
-                    YesOrNoQuestion yesOrNo = new YesOrNoQuestion(
-                            "Voulez-vous réellement échanger les cartes ?",
-                            () -> round.switchCard(otherPlayer, true),
-                            () -> round.switchCard(otherPlayer, false));
-                    QuestionSender sender = new QuestionSender(yesOrNo);
-                    sender.disableEndMsg();
-                    sender.setColor(ColorTheme.QUESTION.color);
-                    sender.setTarget(user);
-                    sender.send(user.openPrivateChannel().complete());
-                });
-        QuestionSender sender = new QuestionSender(userChoice);
-        sender.disableEndMsg();
-        sender.setTarget(user);
-        sender.setColor(ColorTheme.QUESTION.color);
-        sender.send(channel);
+        return answer.get();
     }
 
     public void printSwitch(Player player, Player other, boolean trueOrNot){
@@ -173,12 +161,14 @@ public class MascaradeOut {
                 round::setCharacterToUse);
         QuestionSender sender = new QuestionSender(charChoice);
         sender.disableEndMsg();
+        lastQuestion = sender;
         sender.setTarget(user);
         sender.setColor(ColorTheme.QUESTION.color);
         sender.send(channel);
     }
 
     private CountDown countDown;
+    private ReactionAnalyser contestWaiter;
 
     public void printSetCharacter(GameRound gameRound) {
         Player player = gameRound.player;
@@ -192,22 +182,25 @@ public class MascaradeOut {
         bd.setFooter("Vous pouvez contester avec "+MyEmote.OBJECTION.getId());
         Message msg = channel.sendMessage(bd.build()).complete();
 
-        ReactionAnalyser analyser = new ReactionAnalyser(msg);
-        analyser.addReaction(MyEmote.OBJECTION,
+        contestWaiter = new ReactionAnalyser(msg);
+        contestWaiter.addReaction(MyEmote.OBJECTION,
                 e-> gameRound.contest(gameRound.getGame().getPlayer(Application.userList.getUser(new User(e.getUser())))),
                 e-> gameRound.contest(gameRound.getGame().getPlayer(Application.userList.getUser(new User(e.getUser())))));
+    }
 
+    public void waitForContest(GameRound gameRound) {
+        MyFuture<Boolean> waiter = new MyFuture<>();
         if (countDown != null) countDown.kill();
         countDown = new CountDown(GlobalParameter.CHOICE_USE_TIME_IN_SEC, channel,
                 "Il reste ", "s avant de pouvoir utiliser le pouvoir",
                 "",
                 ()-> {
-                    analyser.killAll();
-                    gameRound.useCharacter();
+                    contestWaiter.killAll();
                     countDown=null;
+                    waiter.sendAnswer(true);
                 });
+        waiter.get();
     }
-
 
     public void printAction(Player player, Card charaChose) {
         EmbedBuilder bd = new EmbedBuilder();
@@ -244,7 +237,7 @@ public class MascaradeOut {
         List<Player> players = Arrays.asList(tableRound.getPlayers());
         players.sort(Comparator.comparing(p->(-p.getPurse().getValue())));
         for (Player player : players) {
-            bd.addField(i++ +"  -  "+player.toString(),null,false);
+            bd.addField(i++ +"  -  "+player.toString(),"",false);
         }
         channel.sendMessage(bd.build()).queue();
     }
@@ -267,26 +260,52 @@ public class MascaradeOut {
         player.getUser().getDiscordUser().openPrivateChannel().complete().sendMessage(bd.build()).queue();
     }
 
-    public void inquisitorProceed(Player player, Inquisitor inquisitor) {
+    public Character askForAChar(Player player, List<Character> chars, String question, boolean inPrivate) {
+        MyFuture<Character> answer = new MyFuture<>();
         QuestionSender sender1 = new QuestionSender(new ArraysChoice<>(
-                player.toString()+" : En tant qu'inquisiteur, à qui demandez-vous de deviner sa carte ?",
-                inquisitor.players,
-                target -> {
-                    QuestionSender sender2 = new QuestionSender(new ArraysChoice<>(
-                            target.toString()+" : Quelle est d'après vous votre carte ?",
-                            inquisitor.characters,
-                            character -> inquisitor.processInfo(target, character)
-                    ));
-                    sender2.setTarget(target.getUser().getDiscordUser());
-                    sender2.disableEndMsg();
-                    sender2.setColor(ColorTheme.QUESTION.color);
-                    sender2.send(this.channel);
-                }
+                player.toString()+" : "+question,
+                chars,
+                answer::sendAnswer
         ));
+        lastQuestion = sender1;
         sender1.setTarget(player.getUser().getDiscordUser());
         sender1.disableEndMsg();
         sender1.setColor(ColorTheme.QUESTION.color);
-        sender1.send(this.channel);
+        if (inPrivate) sender1.send(player.getUser().getDiscordUser().openPrivateChannel().complete());
+        else sender1.send(this.channel);
+        return answer.get();
+    }
+
+    public Player askForAPlayer(Player player, List<Player> players, String question, boolean inPrivate) {
+        MyFuture<Player> answer = new MyFuture<>();
+        QuestionSender sender1 = new QuestionSender(new ArraysChoice<>(
+                player.toString()+" : "+question,
+                players,
+                answer::sendAnswer
+        ));
+        lastQuestion = sender1;
+        sender1.setTarget(player.getUser().getDiscordUser());
+        sender1.disableEndMsg();
+        sender1.setColor(ColorTheme.QUESTION.color);
+        if (inPrivate) sender1.send(player.getUser().getDiscordUser().openPrivateChannel().complete());
+        else sender1.send(this.channel);
+        return answer.get();
+    }
+
+    public boolean askForABoolean(Player player, String question, boolean inPrivate) {
+        MyFuture<Boolean> answer = new MyFuture<>();
+        QuestionSender sender1 = new QuestionSender(new YesOrNoQuestion(
+                player.toString()+" : "+question,
+                ()->answer.sendAnswer(true),
+                ()->answer.sendAnswer(false)
+        ));
+        lastQuestion = sender1;
+        sender1.setTarget(player.getUser().getDiscordUser());
+        sender1.disableEndMsg();
+        sender1.setColor(ColorTheme.QUESTION.color);
+        if (inPrivate) sender1.send(player.getUser().getDiscordUser().openPrivateChannel().complete());
+        else sender1.send(this.channel);
+        return answer.get();
     }
 
     public void printError(Exception e) {

@@ -5,7 +5,7 @@ import java.awt.*;
 public enum Card {
     CABLE(Team.SHERLOCK.color,"Nouveau cable désamorcé !"),
     FAKE(Color.darkGray, "Faux cable.. La partie continue"),
-    BOMB(Team.MORIARTY.color, "BOOOOOOOUM ! Les "+Team.MORIARTY+"s ont fait explosé leur bombe !"),
+    BOMB(Team.MORIARTY.color, "BOOOOOOOUM ! Les "+Team.MORIARTY+"s ont fait exploser leur bombe !"),
     ;
 
 

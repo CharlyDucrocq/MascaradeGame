@@ -43,20 +43,6 @@ public class MascaradeFactory implements GameFactory<MascaradeGame> {
         List<Character> characters = new LinkedList<>();
         characters.add(Character.JUDGE);
         switch (players.length){
-            case 4 : {
-                characters.add(Character.INQUISITOR);
-                characters.add(Character.WITCH);
-                characters.add(Character.JOKER);
-                break;
-            }
-            case 5 : {
-                characters.add(Character.INQUISITOR);
-                characters.add(Character.WITCH);
-                characters.add(Character.JOKER);
-                characters.add(Character.WITCH);
-                break;
-            }
-
             case 6 : {
                 characters.add(Character.BISHOP);
                 characters.add(Character.KING);
@@ -164,5 +150,10 @@ public class MascaradeFactory implements GameFactory<MascaradeGame> {
         MascaradeGame game = new MascaradeGame(players, characters);
         game.setOut(out);
         return game;
+    }
+
+    @Override
+    public int getMinPlayer() {
+        return GlobalParameter.MIN_PLAYERS;
     }
 }

@@ -25,6 +25,10 @@ public enum MyEmote {
     QUESTION("grey_question"),
 
     DICE("game_die"),
+    OK("ok"),
+    NEW("new"),
+    ASTERISK("asterisk"),
+    EXCLAMATION("exclamation")
     ;
 
     public final String name;

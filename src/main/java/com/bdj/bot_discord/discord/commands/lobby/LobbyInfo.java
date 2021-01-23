@@ -10,8 +10,6 @@ import com.bdj.bot_discord.lobby.Game;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-import static com.bdj.bot_discord.main.Application.*;
-
 public class LobbyInfo<G extends Game> extends ErrorCatcherCommand {
     private final String gameName;
     private final GameDistributor<G> lobbies;
@@ -24,19 +22,18 @@ public class LobbyInfo<G extends Game> extends ErrorCatcherCommand {
         this.category = MyCommandCategory.GAME_GESTION;
         this.aliases = new String[]{"lobbyInfo","infoLobby","listPlayer"};
         this.help = "Information sur le lobby courant.";
-        this.ownerCommand = true;
     }
 
     @Override
     protected void executeAux(CommandEvent event) {
-        DiscordLobby<G> lobby = lobbies.getLobby(getUser(event));
+        DiscordLobby<G> lobby = lobbies.getLobby(event.getChannel());
 
         EmbedBuilder eb = new EmbedBuilder();
         eb.setTitle("Lobby information", null);
         eb.setDescription("Lobby pour une partie de "+gameName);
         eb.setColor(ColorTheme.INFO.getColor());
 
-        eb.addField("Administrateur",lobby.getAdmin().toString(), false);
+        eb.addField("Administrateur",lobby.getAdmins().toString(), false);
 
         StringBuilder playerList = new StringBuilder();
         for (User user : lobby.getUsers()) playerList.append(user.toString()).append("\t|\t");

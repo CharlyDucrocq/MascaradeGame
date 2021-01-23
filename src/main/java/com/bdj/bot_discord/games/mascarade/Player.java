@@ -81,8 +81,4 @@ public class Player {
     public void cheat() {
         if(purse.getValue()>= Cheater.GOAL_FOR_WIN) haveWin = true;
     }
-
-    public void ask(QuestionAnswers question) {
-        user.ask(question);
-    }
 }

@@ -1,11 +1,13 @@
 package com.bdj.bot_discord.discord.commands.mascarade;
 
+import com.bdj.bot_discord.discord.commands.mascarade.game.QuestionAgain;
 import com.bdj.bot_discord.discord.utils.MyEmote;
 import com.bdj.bot_discord.discord.commands.TestCommand;
 import com.bdj.bot_discord.discord.commands.lobby.*;
 import com.bdj.bot_discord.discord.commands.mascarade.info.CharacterRecap;
 import com.bdj.bot_discord.discord.commands.mascarade.info.PlayerRecap;
 import com.bdj.bot_discord.games.mascarade.MascaradeFactory;
+import com.bdj.bot_discord.games.mascarade.MascaradeGame;
 import com.bdj.bot_discord.main.Application;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
@@ -25,15 +27,14 @@ public class MascaradeCommands extends CommandClientBuilder {
         this.setActivity(Activity.playing(MyEmote.DICE.getId()));
 
         Command[] commands = new Command[]{
-                new LobbyCreation<>(Application.mascaradeLobbies),
+                new LobbyCreation<>(MascaradeGame.class, Application.mascaradeLobbies, prefix),
                 new LobbyJoin<>(Application.mascaradeLobbies),
-                new LobbyInfo(Application.mascaradeLobbies, "Mascarade"),
+                new LobbyInfo<>(Application.mascaradeLobbies, "Mascarade"),
                 new StartGame<>(Application.mascaradeLobbies, MascaradeFactory.class),
-//                new PeekAction(),
-//                new SwitchAction(),
-//                new ChoiceAction(),
-//                new UseAction(),
-//                new Contest(),
+                new KillGame<>(Application.timesBombLobbies),
+                new MasterClean<>(Application.timesBombLobbies),
+                new GiveAdminAccess<>(Application.timesBombLobbies),
+                new QuestionAgain(),
                 new RulesGetter("http://jeuxstrategie1.free.fr/jeu_mascarade/regle.pdf"),
                 new PlayerRecap(),
                 new CharacterRecap(),
