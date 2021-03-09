@@ -4,11 +4,12 @@ import com.bdj.bot_discord.utils.choice.QuestionAnswers;
 import com.bdj.bot_discord.utils.InOutGameInterface;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.awt.*;
 
 public class InOutDiscord implements InOutGameInterface {
-    private MessageChannel globalChannel;
+    private TextChannel globalChannel;
 
     @Override
     public void printGlobalMsg(String message) {
@@ -47,7 +48,7 @@ public class InOutDiscord implements InOutGameInterface {
         channel.sendMessage(eb.build()).queue();
     }
 
-    public void setGlobalChannel(MessageChannel channel) {
+    public void setGlobalChannel(TextChannel channel) {
         this.globalChannel = channel;
     }
 
@@ -55,7 +56,7 @@ public class InOutDiscord implements InOutGameInterface {
         return globalChannel == null;
     }
 
-    public MessageChannel getGlobalChannel() {
+    public TextChannel getGlobalChannel() {
         return globalChannel;
     }
 }

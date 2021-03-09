@@ -94,4 +94,8 @@ public abstract class Lobby<G extends Game> {
     public String toString() {
         return String.valueOf(ID);
     }
+
+    public void killLobby(){
+
+    }
 }

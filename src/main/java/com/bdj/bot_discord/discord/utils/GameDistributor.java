@@ -7,10 +7,14 @@ import com.bdj.bot_discord.errors.GameNotFinished;
 import com.bdj.bot_discord.errors.NoGameStarted;
 import com.bdj.bot_discord.errors.NoLobbyFound;
 import com.bdj.bot_discord.lobby.Lobby;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.bdj.bot_discord.main.Application.getUser;
 
 public class GameDistributor<G extends Game> {
     private int maxByLobby;
@@ -22,7 +26,7 @@ public class GameDistributor<G extends Game> {
         maxByLobby = max;
     }
 
-    public DiscordLobby<G> newLobby(User admin, MessageChannel channel){
+    public DiscordLobby<G> newLobby(User admin, TextChannel channel){
         if(channelOccupied(channel))
             throw new GameException("Ce channel est déjà occupé");
         DiscordLobby<G> newOne = new DiscordLobby<>(maxByLobby);
@@ -71,7 +75,7 @@ public class GameDistributor<G extends Game> {
         for (User user : toDelete.getUsers()) userGame.remove(user);
         toDelete.getAdmins().forEach(adminGame::remove);
         channelGame.remove(toDelete.getInOut().getGlobalChannel());
-        toDelete.getInOut().printGlobalMsg("La partie à bien été supprimé");
+        toDelete.killLobby();
     }
 
     public Game getGame(User user){
@@ -93,7 +97,7 @@ public class GameDistributor<G extends Game> {
         return channelGame.get(channel);
     }
 
-    public void associate(MessageChannel channel, DiscordLobby<G> lobby){
+    public void associate(TextChannel channel, DiscordLobby<G> lobby){
         if (!lobby.getInOut().noChannel()){
             channelGame.remove(channel);
         }
@@ -121,5 +125,14 @@ public class GameDistributor<G extends Game> {
             adminGame.putIfAbsent(a,new HashSet<>());
             adminGame.get(a).add(lobby);
         });
+    }
+
+    public void activeEmoteListenerJoin(Message msg, DiscordLobby<G> lobby){
+        msg.addReaction(MyEmote.YES.getId()).queue();
+        lobby.setAnalyser(new ReactionAnalyser(msg)
+                .addReaction(
+                        MyEmote.YES,
+                        (e)-> joinLobby(getUser(e.getUser()),lobby),
+                        (e)-> joinLobby(getUser(e.getUser()),lobby)));
     }
 }

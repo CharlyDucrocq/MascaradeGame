@@ -19,11 +19,12 @@ public class ReactionAnalyser {
         this.msg = msg;
     }
 
-    public void addReaction(MyEmote emote, Consumer<MessageReactionAddEvent> ifAdd, Consumer<MessageReactionRemoveEvent> ifRemove){
+    public ReactionAnalyser addReaction(MyEmote emote, Consumer<MessageReactionAddEvent> ifAdd, Consumer<MessageReactionRemoveEvent> ifRemove){
         killed.put(emote, Boolean.FALSE);
         msg.addReaction(emote.getId()).queue();
         addReaction(emote, ifAdd);
         removeReaction(emote, ifRemove);
+        return this;
     }
 
     private void addReaction(MyEmote emote, Consumer<MessageReactionAddEvent> ifAdd){

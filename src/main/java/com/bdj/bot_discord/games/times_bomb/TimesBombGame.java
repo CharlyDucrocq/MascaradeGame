@@ -97,6 +97,7 @@ public class TimesBombGame implements Game {
             if (round.isTheLast()) {
                 winner = Team.MORIARTY;
                 endGame();
+                return;
             }
             for (Player player : players) cardsLeft.addAll(player.getBackCardLeft());
             round = new Round(players, cardsLeft, out);

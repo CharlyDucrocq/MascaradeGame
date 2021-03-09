@@ -42,12 +42,6 @@ public class MasterClean <G extends Game> extends ErrorCatcherCommand {
                     if(!lobby.gameOver()) lobby.killGame();
 
                     lobbies.deleteLobby(lobby);
-
-                    MessageChannel channel = lobby.getChannel();
-                    Objects.requireNonNull(event.getGuild().getGuildChannelById(channel.getId())).delete().queue();
-
-                    VoiceChannel vChannel = lobby.getVoiceChannel();
-                    if(vChannel!=null) Objects.requireNonNull(event.getGuild().getGuildChannelById(vChannel.getId())).delete().queue();
                 });
     }
 }
