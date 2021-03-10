@@ -63,7 +63,9 @@ public class CountDown implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if(on) message.editMessage(prefix+--current+suffix).queue();
+            synchronized (this) {
+                if(on) message.editMessage(prefix+--current+suffix).queue();
+            }
         }
         if (on) deleteMessage();
     }

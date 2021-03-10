@@ -1,5 +1,6 @@
 package com.bdj.bot_discord.games.mascarade;
 
+import com.bdj.bot_discord.discord.lobby.PrivateChannels;
 import com.bdj.bot_discord.discord.utils.InOutDiscord;
 import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
@@ -23,12 +24,12 @@ public class GameTest {
     MascaradeGame game;
     User[] users;
     Player[] players;
-    InOutDiscord inOutMock;
+    PrivateChannels inOutMock;
 
 
     @BeforeEach
     void init(){
-        inOutMock = mock(InOutDiscord.class);
+        inOutMock = mock(PrivateChannels.class);
         Lobby<MascaradeGame> lobby = new DiscordLobby<>(inOutMock, GlobalParameter.MAX_PLAYERS);
         users = new User[NB_PLAYERS];
         for(int i=0;i<NB_PLAYERS;i++){

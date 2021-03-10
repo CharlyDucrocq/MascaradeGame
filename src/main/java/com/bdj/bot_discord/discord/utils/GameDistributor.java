@@ -1,6 +1,7 @@
 package com.bdj.bot_discord.discord.utils;
 
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
+import com.bdj.bot_discord.discord.lobby.PrivateChannels;
 import com.bdj.bot_discord.lobby.Game;
 import com.bdj.bot_discord.errors.GameException;
 import com.bdj.bot_discord.errors.GameNotFinished;
@@ -26,14 +27,14 @@ public class GameDistributor<G extends Game> {
         maxByLobby = max;
     }
 
-    public DiscordLobby<G> newLobby(User admin, TextChannel channel){
-        if(channelOccupied(channel))
+    public DiscordLobby<G> newLobby(User admin, PrivateChannels channels){
+        if(channelOccupied(channels.tChannel))
             throw new GameException("Ce channel est déjà occupé");
-        DiscordLobby<G> newOne = new DiscordLobby<>(maxByLobby);
+        DiscordLobby<G> newOne = new DiscordLobby<>(channels, maxByLobby);
         adminGame.putIfAbsent(admin, new HashSet<>());
         adminGame.get(admin).add(newOne);
         newOne.addAdmin(admin);
-        associate(channel,newOne);
+        associate(channels.tChannel,newOne);
         newOne.getInOut().printGlobalMsg("Partie créée. Admin : "+admin.toString());
         return newOne;
     }
@@ -125,14 +126,5 @@ public class GameDistributor<G extends Game> {
             adminGame.putIfAbsent(a,new HashSet<>());
             adminGame.get(a).add(lobby);
         });
-    }
-
-    public void activeEmoteListenerJoin(Message msg, DiscordLobby<G> lobby){
-        msg.addReaction(MyEmote.YES.getId()).queue();
-        lobby.setAnalyser(new ReactionAnalyser(msg)
-                .addReaction(
-                        MyEmote.YES,
-                        (e)-> joinLobby(getUser(e.getUser()),lobby),
-                        (e)-> joinLobby(getUser(e.getUser()),lobby)));
     }
 }

@@ -1,5 +1,6 @@
 package com.bdj.bot_discord.discord.utils;
 
+import com.bdj.bot_discord.errors.GameException;
 import com.bdj.bot_discord.main.Application;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -31,7 +32,12 @@ public class ReactionAnalyser {
         if (killed.get(emote)) return;
         Application.waiter.waitForEvent(MessageReactionAddEvent.class,e -> check(e, emote), e->{
             synchronized (this) {
-                ifAdd.accept(e);
+                try {
+                    ifAdd.accept(e);
+                } catch (Exception err){
+                    err.printStackTrace();
+                    InOutDiscord.printError(err,msg.getChannel());
+                }
                 addReaction(emote, ifAdd);
             }
         });
@@ -41,7 +47,12 @@ public class ReactionAnalyser {
         if (killed.get(emote)) return;
         Application.waiter.waitForEvent(MessageReactionRemoveEvent.class,e -> check(e, emote), e->{
             synchronized (this) {
-                ifRemove.accept(e);
+                try {
+                    ifRemove.accept(e);
+                } catch (Exception err){
+                    err.printStackTrace();
+                    InOutDiscord.printError(err,msg.getChannel());
+                }
                 removeReaction(emote, ifRemove);
             }
         });
@@ -52,12 +63,14 @@ public class ReactionAnalyser {
         if(user == null) return false;
         return !e.getUser().isBot() &&
                 e.getMessageId().equals(msg.getId()) &&
+                e.getReactionEmote().isEmoji() &&
                 e.getReactionEmote().getEmoji().equals(emote.getId()) &&
                 (target == null || target.equals(e.getUser()));
     }
 
     private synchronized boolean check(MessageReactionRemoveEvent e, MyEmote emote){
         return e.getMessageId().equals(msg.getId()) &&
+                e.getReactionEmote().isEmoji() &&
                 e.getReactionEmote().getEmoji().equals(emote.getId()) &&
                 (target == null || target.equals(e.getUser()));
     }

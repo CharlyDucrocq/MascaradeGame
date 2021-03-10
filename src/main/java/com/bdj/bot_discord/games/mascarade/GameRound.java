@@ -2,6 +2,7 @@ package com.bdj.bot_discord.games.mascarade;
 
 import com.bdj.bot_discord.discord.utils.User;
 import com.bdj.bot_discord.errors.ActionNotAllowed;
+import com.bdj.bot_discord.errors.BadUser;
 import com.bdj.bot_discord.errors.GameException;
 import com.bdj.bot_discord.games.mascarade.card.Card;
 import com.bdj.bot_discord.games.mascarade.card.CardCreator;
@@ -43,6 +44,7 @@ public class GameRound {
     }
 
     public synchronized void contest(Player opponent){
+        if(opponent == null) throw new GameException("Null pointeur");
         if(!contestAllowed) throw new ActionNotAllowed("Vous n'êtes pas autorisé à faire ça maintenant");
         if (contestPlayers.remove(opponent))
             out.printUncontest(opponent);
@@ -97,7 +99,8 @@ public class GameRound {
             throw new GameException("Le personnage doit être definie avant !");
 
         long timeLeft = GlobalParameter.CHOICE_USE_TIME_IN_SEC-Duration.between(characterChoiceInstant,Instant.now()).getSeconds();
-        if(timeLeft>0) throw new GameException("Il reste "+timeLeft+" avant de pouvoir utilisé l'action");
+        if(timeLeft>0)
+            throw new GameException("Il reste "+timeLeft+" avant de pouvoir utilisé l'action");
 
         contestAllowed=false;
         if(noContestPlayers()){

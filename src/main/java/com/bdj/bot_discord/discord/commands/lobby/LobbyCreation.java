@@ -1,6 +1,7 @@
 package com.bdj.bot_discord.discord.commands.lobby;
 
 import com.bdj.bot_discord.discord.commands.MyRole;
+import com.bdj.bot_discord.discord.lobby.PrivateChannels;
 import com.bdj.bot_discord.discord.utils.*;
 import com.bdj.bot_discord.discord.commands.MyCommandCategory;
 import com.bdj.bot_discord.discord.lobby.DiscordLobby;
@@ -33,40 +34,22 @@ public class LobbyCreation<G extends Game> extends ErrorCatcherCommand {
     @Override
     protected void executeAux(CommandEvent event) {
         User user = getUser(event);
-        TextChannel tChannel = createChannel(event, ++channelId);
-        VoiceChannel vChannel = createVoiceChannel(event, channelId);
-        DiscordLobby<G> lobby = lobbies.newLobby(user,tChannel);
-        lobby.setAssociatedVoiceChannel(vChannel);
-        lobbies.activeEmoteListenerJoin(event.getMessage(), lobby);
+        PrivateChannels channels = new PrivateChannels(
+                event.getGuild(),
+                (channelId++)+"-"+gameClass.getSimpleName().replaceAll("(.)([A-Z])", "$1-$2"),
+                event.getMessage().getCategory(),
+                true
+        );
+        DiscordLobby<G> lobby = lobbies.newLobby(user, channels);
+        activeEmoteListenerJoin(event.getMessage(), channels, lobby);
     }
 
-    private VoiceChannel createVoiceChannel(CommandEvent event, int id) {
-        Guild guild = event.getGuild();
-        VoiceChannel result = guild.createVoiceChannel(id+"-"+gameClass.getSimpleName().replaceAll("(.)([A-Z])", "$1-$2"))
-                .setParent(event.getTextChannel().getParent())
-                .complete();
-        result.createPermissionOverride(guild.getPublicRole())
-                .setDeny(Permission.ALL_PERMISSIONS)
-                .setAllow(Permission.EMPTY_PERMISSIONS)
-                .reason("Remove @everyone from the channel")
-                .queue();
-        return result;
-    }
-
-    private TextChannel createChannel(CommandEvent event, int id) {
-        Guild guild = event.getGuild();
-        TextChannel result = guild.createTextChannel(id+"-"+gameClass.getSimpleName().replaceAll("(.)([A-Z])", "$1-$2"))
-                    .setParent(event.getTextChannel().getParent())
-                    .setTopic(  "| " +
-//                            MyEmote.EXCLAMATION.getId()+" **"+prefix+LobbyJoin.NAME+"** pour rejoindre la partie. \n" +
-                            MyEmote.EXCLAMATION.getId()+" **"+prefix+StartGame.NAME+"** pour pour démarrer la partie. " +
-                            MyEmote.EXCLAMATION.getId())
-                    .complete();
-        result.createPermissionOverride(guild.getPublicRole())
-                .setDeny(Permission.ALL_PERMISSIONS)
-                .setAllow(Permission.EMPTY_PERMISSIONS)
-                .reason("Remove @everyone from the channel")
-                .queue();
-        return result;
+    public void activeEmoteListenerJoin(Message msg, PrivateChannels channels, DiscordLobby<G> lobby){
+        msg.addReaction(MyEmote.YES.getId()).queue();
+        channels.setAnalyser(new ReactionAnalyser(msg)
+                .addReaction(
+                        MyEmote.YES,
+                        (e)-> lobbies.joinLobby(getUser(e.getUser()),lobby),
+                        (e)-> lobbies.joinLobby(getUser(e.getUser()),lobby)));
     }
 }

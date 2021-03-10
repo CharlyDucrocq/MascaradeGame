@@ -15,6 +15,9 @@ import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import com.bdj.bot_discord.utils.UserList;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 
 //import com.bdj.bot_discord.discord.utils.InOutDiscord;
 //import com.bdj.bot_discord.discord.commands.Command;
@@ -91,7 +94,11 @@ public class Application extends ListenerAdapter {
     public static EventWaiter waiter = new EventWaiter();
 
     public static void main(String[] argv) throws LoginException {
-        JDABuilder builder = JDABuilder.createDefault(TOKEN);
+        JDABuilder builder = JDABuilder
+                .createDefault(TOKEN)
+                .setChunkingFilter(ChunkingFilter.ALL)
+                .setMemberCachePolicy(MemberCachePolicy.ALL)
+                .enableIntents(GatewayIntent.GUILD_MEMBERS);
         //builder.addEventListeners(new Application());
 
         builder.addEventListeners(new MascaradeCommands(MY_ID).build());

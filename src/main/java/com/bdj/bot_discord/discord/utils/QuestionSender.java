@@ -67,15 +67,17 @@ public class QuestionSender {
     public Message send(MessageChannel channel){
         this.channel = channel;
         msg = channel.sendMessage(getMsgEmbed()).complete();
-        Message msg = this.msg;
-        User target = this.target;
-        waiter.waitForEvent(MessageReactionAddEvent.class, (e)->haveToReact(e, msg, target, emotes), this::react);
+        activateListener();
         try{
             for (MyEmote emote : emotes) msg.addReaction(emote.getId()).complete();
         } catch (ErrorResponseException ignored){
 
         }
         return msg;
+    }
+
+    private void activateListener() {
+        waiter.waitForEvent(MessageReactionAddEvent.class, (e)->haveToReact(e, msg, target, emotes), this::react);
     }
 
     public void sendAgain() {
@@ -94,16 +96,23 @@ public class QuestionSender {
         String msgId = event.getMessageId();
         return (author != null && author.equals(target))
                 && (msg!=null && msgId.equals(msg.getId()))
+                && event.getReactionEmote().isEmoji()
                 && emotes.contains(MyEmote.getFromId(event.getReactionEmote().getEmoji()));
     }
 
     private synchronized void react(MessageReactionAddEvent event){
-        Answer answer = question.getAnswers().get(emotes.indexOf(MyEmote.getFromId(event.getReactionEmote().getEmoji())));
-        if(printChoiceMsg) channel.sendMessage("Vous avez choisie : "+answer.getDescription()).queue();
-        answer.toDoIfChose();
-        msg.delete().queue();
-        afterAnswerAction.accept(answer);
-        done = true;
+        try {
+            Answer answer = question.getAnswers().get(emotes.indexOf(MyEmote.getFromId(event.getReactionEmote().getEmoji())));
+            if (printChoiceMsg) channel.sendMessage("Vous avez choisie : " + answer.getDescription()).queue();
+            answer.toDoIfChose();
+            msg.delete().queue();
+            afterAnswerAction.accept(answer);
+            done = true;
+        } catch (Exception e){
+            e.printStackTrace();
+            InOutDiscord.printError(e,event.getChannel());
+            activateListener();
+        }
     }
 
     public void addPostEvent(Consumer<Answer> action) {
