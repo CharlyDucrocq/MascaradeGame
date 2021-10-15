@@ -1,3 +1,11 @@
+# Upgrade : plus de jeu
+Le bot est maintenant ouvert au développement de nouveaux jeux
+
+Jeu disponible :
+- Times bomb (fonctionnel)
+- Mascarade (instable)
+- Code name (en travaux)
+
 # MascaradeGame
 Adaptation du jeu Mascarade sous forme de bot discord
 
